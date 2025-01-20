@@ -80,7 +80,7 @@ resource audit_rg  'Microsoft.Resources/resourceGroups@2024-03-01' = {
    }
  }
 
-
+/*
  // Deploy Purview using module
 module purview './modules/purview.bicep' = if (create_purview || enable_purview) {
   name: purview_deployment_name
@@ -149,7 +149,7 @@ module fabric_capacity './modules/fabric-capacity.bicep' = {
     adminUsers: kv_ref.getSecret('fabric-capacity-admin-username')
   }
 }
-
+*/
 //Deploy SQL control DB 
 module controldb './modules/sqldb.bicep' = {
   name: controldb_deployment_name
