@@ -25,7 +25,6 @@ jobs:
         scope: resourcegroup
         region: westeurope
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
-        # subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
         template: iac/bicep/main.bicep
         # parameters: 'k1=v1 k2=v2 k3=v3'
         failOnStdErr: false
