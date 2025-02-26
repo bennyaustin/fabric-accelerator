@@ -47,7 +47,6 @@ module secrets './modules/secrets.bicep' = {
   name: secrets_deployment_name
   params: {
     keyvault_name: kv.outputs.keyvault_name
-    location: rglocation
     secrets: [
       {
         name: 'fabric-capacity-admin-username'
