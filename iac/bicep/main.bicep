@@ -24,6 +24,7 @@ param deployment_suffix string = utcNow('sast')
 var fabric_deployment_name = 'fabric_dataplatform_deployment_${deployment_suffix}'
 var keyvault_deployment_name = 'keyvault_deployment_${deployment_suffix}'
 var controldb_deployment_name = 'controldb_deployment_${deployment_suffix}'
+var secrets_deployment_name = 'secrets_deployment_${deployment_suffix}'
 
 // Deploy Key Vault with default access policies using module
 module kv './modules/keyvault.bicep' = {
@@ -39,6 +40,29 @@ module kv './modules/keyvault.bicep' = {
 
 resource kv_ref 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: kv.outputs.keyvault_name
+}
+
+// Create necessary secrets in the Key Vault
+module secrets './modules/secrets.bicep' = {
+  name: secrets_deployment_name
+  params: {
+    keyvault_name: kv.outputs.keyvault_name
+    location: rglocation
+    secrets: [
+      {
+        name: 'fabric-capacity-admin-username'
+        value: 'adminUser'
+      }
+      {
+        name: 'sqlserver-ad-admin-username'
+        value: 'sqlAdminUser'
+      }
+      {
+        name: 'sqlserver-ad-admin-sid'
+        value: 'sqlAdminSid'
+      }
+    ]
+  }
 }
 
 // Deploy Microsoft Fabric Capacity
