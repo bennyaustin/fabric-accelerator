@@ -2,9 +2,6 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-@description('Resource group where Microsoft Fabric capacity will be deployed')
-param dprg string
-
 @description('Microsoft Fabric Resource group location')
 param rglocation string = 'westeurope'
 
