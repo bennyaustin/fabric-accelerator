@@ -31,19 +31,19 @@ param database_sku_name string ='GP_S_Gen5_1'
 param auto_pause_duration int =60
 
 @description('Flag to indicate whether to enable integration of data platform resources with either an existing or new Purview resource')
-param enable_purview bool
+param enable_purview bool = false
 
 @description('Flag to indicate whether to enable audit logging of SQL Server')
 param enable_audit bool = false
 
-@description('Resource Name of new or existing Purview Account. Specify a resource name if create_purview=true or enable_purview=true')
-param purview_resource object
+// @description('Resource Name of new or existing Purview Account. Specify a resource name if create_purview=true or enable_purview=true')
+// param purview_resource object
 
-@description('Resource name of audit storage account.')
-param audit_storage_name string
+// @description('Resource name of audit storage account.')
+// param audit_storage_name string
 
-@description('Resource group of audit storage account is deployed')
-param auditrg string
+// @description('Resource group of audit storage account is deployed')
+// param auditrg string
 
 // Variables
 var suffix = uniqueString(resourceGroup().id)
@@ -99,22 +99,22 @@ resource database 'Microsoft.Sql/servers/databases@2021-11-01' ={
 }
 
 //Get Reference to audit storage account
-resource audit_storage_account 'Microsoft.Storage/storageAccounts@2023-01-01' existing = if(enable_audit) {
-  name: audit_storage_name
-  scope: resourceGroup(auditrg)
-}
+// resource audit_storage_account 'Microsoft.Storage/storageAccounts@2023-01-01' existing = if(enable_audit) {
+//   name: audit_storage_name
+//   scope: resourceGroup(auditrg)
+// }
 
-module storage_permissions 'storage-permissions.bicep' = if(enable_audit)  {
-  name: 'storage_permissions'
-  scope: resourceGroup(auditrg)
-  params:{
-    storage_name: audit_storage_name
-    storage_rg: auditrg
-    principalId: sqlserver.identity.principalId
-    grant_reader: false
-    grant_contributor: true
-  }
-}
+// module storage_permissions 'storage-permissions.bicep' = if(enable_audit)  {
+//   name: 'storage_permissions'
+//   scope: resourceGroup(auditrg)
+//   params:{
+//     storage_name: audit_storage_name
+//     storage_rg: auditrg
+//     principalId: sqlserver.identity.principalId
+//     grant_reader: false
+//     grant_contributor: true
+//   }
+// }
 
 // Deploy audit diagnostics Azure SQL Server to storage account
 resource sqlserver_audit 'Microsoft.Sql/servers/auditingSettings@2023-08-01-preview' = if(enable_audit)  {
@@ -129,7 +129,7 @@ resource sqlserver_audit 'Microsoft.Sql/servers/auditingSettings@2023-08-01-prev
     retentionDays: 90
     state: 'Enabled'
     storageAccountSubscriptionId: subscription().subscriptionId
-    storageEndpoint: audit_storage_account.properties.primaryEndpoints.blob
+    // storageEndpoint: audit_storage_account.properties.primaryEndpoints.blob
  }
 }
 //Role Assignment
@@ -144,7 +144,7 @@ resource grant_purview_reader_role 'Microsoft.Authorization/roleAssignments@2020
   scope: sqlserver
   properties: {
     principalType: 'ServicePrincipal'
-    principalId: purview_resource.identity.principalId
+    // principalId: purview_resource.identity.principalId
     roleDefinitionId: readerRoleDefinition.id
   }
 }
