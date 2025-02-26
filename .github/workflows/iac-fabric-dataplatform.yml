@@ -22,7 +22,7 @@ jobs:
     - name: deploy
       uses: azure/arm-deploy@v1
       with:
-        scope: resourceGroup
+        scope: resourcegroup
         region: westeurope
         resourceGroupName: ${{ secrets.RESOURCE_GROUP_NAME }}
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
