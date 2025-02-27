@@ -28,7 +28,7 @@ module kv './modules/keyvault.bicep' = {
   name: keyvault_deployment_name
   params: {
     location: rglocation
-    keyvault_name: 'ba-kv01'
+    keyvault_name: 'ba-kv01-${deployment_suffix}'
     cost_centre_tag: cost_centre_tag
     owner_tag: owner_tag
     sme_tag: sme_tag
