@@ -40,15 +40,15 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     accessPolicies: [
       { tenantId: subscription().tenantId
         objectId: '30f93c8e-0d25-484d-92cb-532d0828186a' // Mark ObjectID
-        permissions: { secrets: ['list', 'get', 'set'] }
+        permissions: { secrets: ['list', 'get', 'set', 'delete', 'recover'] }
       }
       { tenantId: subscription().tenantId
         objectId: 'a90a3e69-5914-4fa3-b7a4-1180fef0aa41' // Anushka ObjectID
-        permissions: { secrets: ['list', 'get', 'set'] }
+        permissions: { secrets: ['list', 'get', 'set', 'delete', 'recover'] }
       }
       { tenantId: subscription().tenantId
         objectId: '868c7499-b54c-48b3-9030-55f0b79d81b2' // Service principal ID
-        permissions: { secrets: ['list', 'get', 'set'] }
+        permissions: { secrets: ['list', 'get', 'set', 'delete', 'recover'] }
       }
     ]
   }
