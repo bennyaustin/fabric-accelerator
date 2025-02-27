@@ -1,7 +1,10 @@
 // Scope
-targetScope = 'resourceGroup'
+targetScope = 'subscription'
 
 // Parameters
+@description('Resource group where Microsoft Fabric capacity will be deployed. Resource group will be created if it doesnt exist')
+param dprg string = 'rg-fabric'
+
 @description('Microsoft Fabric Resource group location')
 param rglocation string = 'westeurope'
 
@@ -23,11 +26,23 @@ var keyvault_deployment_name = 'keyvault_deployment_${deployment_suffix}'
 var controldb_deployment_name = 'controldb_deployment_${deployment_suffix}'
 var secrets_deployment_name = 'secrets_deployment_${deployment_suffix}'
 
+// Create data platform resource group
+resource fabric_rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
+  name: dprg
+  location: rglocation
+  tags: {
+    CostCentre: cost_centre_tag
+    Owner: owner_tag
+    SME: sme_tag
+  }
+}
+
 // Deploy Key Vault with default access policies using module
 module kv './modules/keyvault.bicep' = {
   name: keyvault_deployment_name
+  scope: fabric_rg
   params: {
-    location: rglocation
+    location: fabric_rg.location
     keyvault_name: 'ba-kv01'
     cost_centre_tag: cost_centre_tag
     owner_tag: owner_tag
@@ -37,11 +52,13 @@ module kv './modules/keyvault.bicep' = {
 
 resource kv_ref 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: kv.outputs.keyvault_name
+  scope: fabric_rg
 }
 
 // Create necessary secrets in the Key Vault
 module secrets './modules/secrets.bicep' = {
   name: secrets_deployment_name
+  scope: fabric_rg
   params: {
     keyvault_name: kv.outputs.keyvault_name
     secrets: [
@@ -64,9 +81,10 @@ module secrets './modules/secrets.bicep' = {
 // Deploy Microsoft Fabric Capacity
 module fabric_capacity './modules/fabric-capacity.bicep' = {
   name: fabric_deployment_name
+  scope: fabric_rg
   params: {
     fabric_name: 'bafabric01'
-    location: rglocation
+    location: fabric_rg.location
     cost_centre_tag: cost_centre_tag
     owner_tag: owner_tag
     sme_tag: sme_tag
@@ -78,10 +96,11 @@ module fabric_capacity './modules/fabric-capacity.bicep' = {
 // Deploy SQL control DB
 module controldb './modules/sqldb.bicep' = {
   name: controldb_deployment_name
+  scope: fabric_rg
   params: {
     sqlserver_name: 'ba-sql01'
     database_name: 'controlDB'
-    location: rglocation
+    location: fabric_rg.location
     cost_centre_tag: cost_centre_tag
     owner_tag: owner_tag
     sme_tag: sme_tag
@@ -91,3 +110,6 @@ module controldb './modules/sqldb.bicep' = {
     database_sku_name: 'GP_S_Gen5_1'
   }
 }
+
+// Output the Key Vault name
+output keyvault_name string = kv.outputs.keyvault_name
