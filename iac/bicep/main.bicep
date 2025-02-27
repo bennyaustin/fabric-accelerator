@@ -22,13 +22,14 @@ var fabric_deployment_name = 'fabric_dataplatform_deployment_${deployment_suffix
 var keyvault_deployment_name = 'keyvault_deployment_${deployment_suffix}'
 var controldb_deployment_name = 'controldb_deployment_${deployment_suffix}'
 var secrets_deployment_name = 'secrets_deployment_${deployment_suffix}'
+var keyvault_name = 'bakv01${deployment_suffix}'
 
 // Deploy Key Vault with default access policies using module
 module kv './modules/keyvault.bicep' = {
   name: keyvault_deployment_name
   params: {
     location: rglocation
-    keyvault_name: 'ba-kv01-${deployment_suffix}'
+    keyvault_name: keyvault_name
     cost_centre_tag: cost_centre_tag
     owner_tag: owner_tag
     sme_tag: sme_tag

@@ -16,7 +16,7 @@ param keyvault_name string
 
 // Variables
 var suffix = uniqueString(resourceGroup().id)
-var keyvault_uniquename = '${keyvault_name}-${suffix}'
+var keyvault_uniquename = take('${keyvault_name}${suffix}', 24)
 
 // Create Key Vault
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' = {
