@@ -30,10 +30,10 @@ param enable_purview bool = true
 param purviewrg string= 'rg-datagovernance'
 
 @description('Location of Purview resource. This may not be same as the Fabric resource group location')
-param purview_location string= 'northeurope'
+param purview_location string= 'westeurope'
 
 @description('Resource Name of new or existing Purview Account. Must be globally unique. Specify a resource name if either create_purview=true or enable_purview=true')
-param purview_name string = 'SupremacyDG' // Replace with a Globally unique name
+param purview_name string = 'SupremacyDG001' // Replace with a Globally unique name
 
 @description('Flag to indicate whether auditing of data platform resources should be enabled')
 param enable_audit bool = true
