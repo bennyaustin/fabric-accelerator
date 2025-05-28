@@ -5,6 +5,15 @@ targetScope = 'subscription'
 @description('Resource group where Microsoft Fabric capacity will be deployed. Resource group will be created if it doesnt exist')
 param dprg string= 'rg-fabric'
 
+@description('replace keyvault capacity admin credentials')
+param capacity_admin string = 'mukesh.yadav@supremacy.onmicrosoft.com'
+
+@description('replace keyvault sql admin credentials')
+param sql_admin string = 'mukesh.yadav@supremacy.onmicrosoft.com'
+
+@description('replace keyvault sql admin object id credentials')
+param sql_admin_obj_id string = '5181bdcd-7a15-442c-892c-afefb0db6225'
+
 @description('Microsoft Fabric Resource group location')
 param rglocation string = 'westeurope'
 
@@ -146,7 +155,7 @@ module fabric_capacity './modules/fabric-capacity.bicep' = {
     cost_centre_tag: cost_centre_tag
     owner_tag: owner_tag
     sme_tag: sme_tag
-    adminUsers: kv_ref.getSecret('fabric-capacity-admin-username')
+    adminUsers: capacity_admin
     skuName: 'F4' // Default Fabric Capacity SKU F2
   }
 }
@@ -162,8 +171,8 @@ module controldb './modules/sqldb.bicep' = {
      cost_centre_tag: cost_centre_tag
      owner_tag: owner_tag
      sme_tag: sme_tag
-     ad_admin_username:  kv_ref.getSecret('sqlserver-ad-admin-username')
-     ad_admin_sid:  kv_ref.getSecret('sqlserver-ad-admin-sid')  
+     ad_admin_username:  sql_admin
+     ad_admin_sid:  sql_admin_obj_id 
      auto_pause_duration: 60
      database_sku_name: 'GP_S_Gen5_1' 
      enable_purview: enable_purview
