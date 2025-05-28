@@ -115,7 +115,7 @@ module kv './modules/keyvault.bicep' = {
   scope: fabric_rg
   params:{
      location: fabric_rg.location
-     keyvault_name: 'ba-kv01'
+     keyvault_name: 'ba-kv02'
      cost_centre_tag: cost_centre_tag
      owner_tag: owner_tag
      sme_tag: sme_tag
