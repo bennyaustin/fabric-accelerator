@@ -21,7 +21,7 @@ param sme_tag string ='mukesh.yadav@supremacy.onmicrosoft.com'
 param deployment_suffix string = utcNow()
 
 @description('Flag to indicate whether to create a new Purview resource with this data platform deployment')
-param create_purview bool = false
+param create_purview bool = true
 
 @description('Flag to indicate whether to enable integration of data platform resources with either an existing or new Purview resource')
 param enable_purview bool = true
