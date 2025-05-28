@@ -6,16 +6,16 @@ targetScope = 'subscription'
 param dprg string= 'rg-fabric'
 
 @description('Microsoft Fabric Resource group location')
-param rglocation string = 'australiaeast'
+param rglocation string = 'northeurope'
 
 @description('Cost Centre tag that will be applied to all resources in this deployment')
-param cost_centre_tag string = 'MCAPS'
+param cost_centre_tag string = 'dataAnalytics'
 
 @description('System Owner tag that will be applied to all resources in this deployment')
-param owner_tag string = 'whirlpool@contoso.com'
+param owner_tag string = 'mukesh.yadav@supremacy.onmicrosoft.com'
 
 @description('Subject Matter EXpert (SME) tag that will be applied to all resources in this deployment')
-param sme_tag string ='sombrero@contoso.com'
+param sme_tag string ='mukesh.yadav@supremacy.onmicrosoft.com'
 
 @description('Timestamp that will be appendedto the deployment name')
 param deployment_suffix string = utcNow()
@@ -30,10 +30,10 @@ param enable_purview bool = true
 param purviewrg string= 'rg-datagovernance'
 
 @description('Location of Purview resource. This may not be same as the Fabric resource group location')
-param purview_location string= 'westus2'
+param purview_location string= 'northeurope'
 
 @description('Resource Name of new or existing Purview Account. Must be globally unique. Specify a resource name if either create_purview=true or enable_purview=true')
-param purview_name string = 'ContosoDG' // Replace with a Globally unique name
+param purview_name string = 'SupremacyDG' // Replace with a Globally unique name
 
 @description('Flag to indicate whether auditing of data platform resources should be enabled')
 param enable_audit bool = true
