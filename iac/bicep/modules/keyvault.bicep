@@ -57,10 +57,6 @@ resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' ={
         objectId: 'ba0dbc04-7f21-4dcd-888c-5df148ce6951' // Replace this with your user/group ObjectID
         permissions: {secrets:['list','get','set']}
       }
-      { tenantId: subscription().tenantId
-        objectId: '703595dd-9298-4ef8-ab80-a64f10e8ea07' // Replace this with your user/group ObjectID
-        permissions: {secrets:['list','get']}
-      }
     ]
   }
 }
