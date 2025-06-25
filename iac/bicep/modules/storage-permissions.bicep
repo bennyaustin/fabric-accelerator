@@ -1,8 +1,8 @@
 //@description('Resource name storage account to which permissions are to be granted')
 //param storage_name string
 
-@description('Resource group of storage account')
-param storage_rg string
+//@description('Resource group of storage account')
+//param storage_rg string
 
 @description('Managed Identity of the resource being granted permissions')
 param principalId string
