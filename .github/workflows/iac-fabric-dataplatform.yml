@@ -28,3 +28,6 @@ jobs:
         template: iac/bicep/main.bicep
         # parameters: 'k1=v1 k2=v2 k3=v3'
         failOnStdErr: false
+        parameters: |
+          --debug
+
