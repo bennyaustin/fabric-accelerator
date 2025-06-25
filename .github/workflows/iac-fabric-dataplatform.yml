@@ -18,6 +18,7 @@ jobs:
       with:
            creds: '{"clientId":"${{ secrets.ACTION_SPN_CLIENTID }}","clientSecret":"${{ secrets.ACTION_SPN_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
     
+    # Downgrade azure cli
     - name: Downgrade Azure CLI
       run: |
         az version
