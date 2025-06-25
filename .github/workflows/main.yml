@@ -32,7 +32,6 @@ jobs:
           az deployment sub validate \
             --location westus \
             --template-file iac/bicep/main.bicep \
-            --parameters @iac/bicep/parameters.json \
             --debug
 
       - name: Deploy Bicep Template
@@ -40,5 +39,4 @@ jobs:
           az deployment sub create \
             --location westus \
             --template-file iac/bicep/main.bicep \
-            --parameters @iac/bicep/parameters.json \
             --debug
