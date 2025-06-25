@@ -1,42 +1,44 @@
 name: Azure Bicep Deployment
-on: workflow_dispatch 
+
+on: workflow_dispatch
 # on:
 #   push:
 #     branches:
-#         - main
+#       - main
 #     paths:
-#         - '**.bicep'
+#       - '**.bicep'
+
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install Bicep CLI
-        run: az bicep install
+      - name: Install Bicep CLI
+        run: az bicep install
 
-      - name: Build Bicep Template
-        run: az bicep build --file iac/bicep/main.bicep
+      - name: Build Bicep Template
+        run: az bicep build --file iac/bicep/main.bicep
 
-      - name: Validate Bicep Template
-        run: |
-          az deployment sub validate \
-            --location westus \
-            --template-file iac/bicep/main.bicep \
-            --parameters @iac/bicep/parameters.json \
-            --debug
+      - name: Validate Bicep Template
+        run: |
+          az deployment sub validate \
+            --location westus \
+            --template-file iac/bicep/main.bicep \
+            --parameters @iac/bicep/parameters.json \
+            --debug
 
-      - name: Deploy Bicep Template
-        run: |
-          az deployment sub create \
-            --location westus \
-            --template-file iac/bicep/main.bicep \
-            --parameters @iac/bicep/parameters.json \
-            --debug
+      - name: Deploy Bicep Template
+        run: |
+          az deployment sub create \
+            --location westus \
+            --template-file iac/bicep/main.bicep \
+            --parameters @iac/bicep/parameters.json \
+            --debug
