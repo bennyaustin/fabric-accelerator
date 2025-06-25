@@ -24,7 +24,7 @@ param ad_admin_username string
 @secure()
 param ad_admin_sid string
 
-@description('Database SKU name, e.g P3. For valid values, run this CLI az sql db list-editions -l australiaeast -o table')
+@description('Database SKU name, e.g P3. For valid values, run this CLI az sql db list-editions -l westus -o table')
 param database_sku_name string ='GP_S_Gen5_1'
 
 @description('Time in minutes after which database is automatically paused')
