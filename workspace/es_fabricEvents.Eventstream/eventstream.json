@@ -1,0 +1,795 @@
+{
+  "sources": [
+    {
+      "id": "1f00e84d-959f-46bd-b2d7-ce8cb28d6f18",
+      "name": "Fabric-Accelerator-Workspace",
+      "type": "FabricWorkspaceItemEvents",
+      "properties": {
+        "eventScope": "Workspace",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "includedEventTypes": [
+          "Microsoft.Fabric.ItemCreateSucceeded",
+          "Microsoft.Fabric.ItemCreateFailed",
+          "Microsoft.Fabric.ItemUpdateSucceeded",
+          "Microsoft.Fabric.ItemUpdateFailed",
+          "Microsoft.Fabric.ItemDeleteSucceeded",
+          "Microsoft.Fabric.ItemDeleteFailed",
+          "Microsoft.Fabric.ItemReadSucceeded",
+          "Microsoft.Fabric.ItemReadFailed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "2dd6053a-a31c-442d-b305-8e017672d0ca",
+      "name": "dw-gold",
+      "type": "FabricOneLakeEvents",
+      "properties": {
+        "tenantId": "2f6fdebd-fa25-44d4-8be1-d2e5360a6e6d",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "ec6604ba-216f-4850-873c-39ba53b9a6d5",
+        "oneLakePaths": [
+          "/Tables"
+        ],
+        "includedEventTypes": [
+          "Microsoft.Fabric.OneLake.FileCreated",
+          "Microsoft.Fabric.OneLake.FileDeleted",
+          "Microsoft.Fabric.OneLake.FileRenamed",
+          "Microsoft.Fabric.OneLake.FolderCreated",
+          "Microsoft.Fabric.OneLake.FolderDeleted",
+          "Microsoft.Fabric.OneLake.FolderRenamed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "37054380-0a31-4806-8e12-e38862e7151a",
+      "name": "Master-ELT-ASQL",
+      "type": "FabricJobEvents",
+      "properties": {
+        "eventScope": "Item",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "d01d081c-c740-4b27-b3b9-ae99e876b737",
+        "includedEventTypes": [
+          "Microsoft.Fabric.JobEvents.ItemJobCreated",
+          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
+          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
+          "Microsoft.Fabric.JobEvents.ItemJobFailed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "c9169667-6d84-4650-9eea-88aeb3498274",
+      "name": "lh-bronze-storage",
+      "type": "FabricOneLakeEvents",
+      "properties": {
+        "tenantId": "2f6fdebd-fa25-44d4-8be1-d2e5360a6e6d",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "bf3afb3e-1567-46a1-a3fd-1058ee2826f7",
+        "oneLakePaths": [
+          "/Tables",
+          "/Files"
+        ],
+        "includedEventTypes": [
+          "Microsoft.Fabric.OneLake.FileCreated",
+          "Microsoft.Fabric.OneLake.FileDeleted",
+          "Microsoft.Fabric.OneLake.FileRenamed",
+          "Microsoft.Fabric.OneLake.FolderCreated",
+          "Microsoft.Fabric.OneLake.FolderDeleted",
+          "Microsoft.Fabric.OneLake.FolderRenamed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "e715f26e-6a5d-4200-a6b3-ea5455b231f1",
+      "name": "Optimize-DeltaLake-Tabless",
+      "type": "FabricJobEvents",
+      "properties": {
+        "eventScope": "Item",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "f462c0a8-3b04-4e63-81c3-0dc0a0af5ded",
+        "includedEventTypes": [
+          "Microsoft.Fabric.JobEvents.ItemJobCreated",
+          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
+          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
+          "Microsoft.Fabric.JobEvents.ItemJobFailed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "f4104096-9f8d-464f-be4c-513c4fb7c4c9",
+      "name": "lh-silver-storage",
+      "type": "FabricOneLakeEvents",
+      "properties": {
+        "tenantId": "2f6fdebd-fa25-44d4-8be1-d2e5360a6e6d",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "eb7b79cc-b0e6-4414-b636-bbe0f6e4ac45",
+        "oneLakePaths": [
+          "/Tables",
+          "/Files"
+        ],
+        "includedEventTypes": [
+          "Microsoft.Fabric.OneLake.FileCreated",
+          "Microsoft.Fabric.OneLake.FileDeleted",
+          "Microsoft.Fabric.OneLake.FileRenamed",
+          "Microsoft.Fabric.OneLake.FolderCreated",
+          "Microsoft.Fabric.OneLake.FolderDeleted",
+          "Microsoft.Fabric.OneLake.FolderRenamed"
+        ],
+        "filters": []
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "4b20a84f-1921-4390-b171-dafd6e073179",
+      "name": "storageEvents",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "19510765-0b90-4ee4-826e-fda387497282",
+        "databaseName": "kdb_fabricEvents",
+        "tableName": "storageEvents",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "Filter_OnelakeEvents"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "Filter_OnelakeEvents",
+          "schema": {
+            "columns": [
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "datacontenttype",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "dataschemaversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "4bae2697-4847-4805-9967-e6599be29cdd",
+      "name": "workspaceEvents",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "19510765-0b90-4ee4-826e-fda387497282",
+        "databaseName": "kdb_fabricEvents",
+        "tableName": "workspaceEvents",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "Filter_WorkspaceEvents"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "Filter_WorkspaceEvents",
+          "schema": {
+            "columns": [
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "datacontenttype",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "dataschemaversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "7f5758fc-759c-46ea-bcdd-fa0ac58d7c60",
+      "name": "jobEvents",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
+        "itemId": "19510765-0b90-4ee4-826e-fda387497282",
+        "databaseName": "kdb_fabricEvents",
+        "tableName": "jobEvents",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "Filter_JobEvents"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "Filter_JobEvents",
+          "schema": {
+            "columns": [
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "datacontenttype",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "dataschemaversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "8cf2cc6f-bbd9-487b-8744-e424af00537e",
+      "name": "es_fabricEvents-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [
+        {
+          "name": "dw-gold"
+        },
+        {
+          "name": "Fabric-Accelerator-Workspace"
+        },
+        {
+          "name": "lh-bronze-storage"
+        },
+        {
+          "name": "lh-silver-storage"
+        },
+        {
+          "name": "Master-ELT-ASQL"
+        },
+        {
+          "name": "Optimize-DeltaLake-Tabless"
+        }
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "name": "Filter_JobEvents",
+      "type": "Filter",
+      "inputNodes": [
+        {
+          "name": "es_fabricEvents-stream"
+        }
+      ],
+      "properties": {
+        "conditions": [
+          {
+            "column": {
+              "expressionType": "ColumnReference",
+              "node": null,
+              "columnName": "type",
+              "columnPathSegments": []
+            },
+            "operatorType": "StartsWith",
+            "value": {
+              "expressionType": "Literal",
+              "dataType": "Nvarchar(max)",
+              "value": "Microsoft.Fabric.JobEvents"
+            }
+          }
+        ]
+      },
+      "inputSchemas": [
+        {
+          "name": "es_fabricEvents-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "datacontenttype",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "dataschemaversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Filter_OnelakeEvents",
+      "type": "Filter",
+      "inputNodes": [
+        {
+          "name": "es_fabricEvents-stream"
+        }
+      ],
+      "properties": {
+        "conditions": [
+          {
+            "column": {
+              "expressionType": "ColumnReference",
+              "node": null,
+              "columnName": "type",
+              "columnPathSegments": []
+            },
+            "operatorType": "StartsWith",
+            "value": {
+              "expressionType": "Literal",
+              "dataType": "Nvarchar(max)",
+              "value": "Microsoft.Fabric.OneLake"
+            }
+          }
+        ]
+      },
+      "inputSchemas": [
+        {
+          "name": "es_fabricEvents-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "datacontenttype",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "dataschemaversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Filter_WorkspaceEvents",
+      "type": "Filter",
+      "inputNodes": [
+        {
+          "name": "es_fabricEvents-stream"
+        }
+      ],
+      "properties": {
+        "conditions": [
+          {
+            "column": {
+              "expressionType": "ColumnReference",
+              "node": null,
+              "columnName": "type",
+              "columnPathSegments": []
+            },
+            "operatorType": "StartsWith",
+            "value": {
+              "expressionType": "Literal",
+              "dataType": "Nvarchar(max)",
+              "value": "Microsoft.Fabric.Item"
+            }
+          }
+        ]
+      },
+      "inputSchemas": [
+        {
+          "name": "es_fabricEvents-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "datacontenttype",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "dataschemaversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventProcessedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "PartitionId",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "EventEnqueuedUtcTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "compatibilityLevel": "1.0"
+}
