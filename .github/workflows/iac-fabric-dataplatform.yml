@@ -17,6 +17,11 @@ jobs:
     - uses: azure/login@v1
       with:
            creds: '{"clientId":"${{ secrets.ACTION_SPN_CLIENTID }}","clientSecret":"${{ secrets.ACTION_SPN_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
+    
+    - name: Downgrade Azure CLI
+      run: |
+        az version
+        pip install azure-cli==2.53.1
 
     # Deploy Bicep file
     - name: deploy
