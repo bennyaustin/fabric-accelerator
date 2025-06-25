@@ -67,7 +67,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       },
       {
@@ -93,7 +93,7 @@
             "value": "@pipeline().parameters.ComputeName",
             "type": "Expression"
           },
-          "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+          "workspaceId": "2836d0c5-10d4-49c7-89d1-0b244cb04b34",
           "parameters": {
             "L1TransformInstanceID": {
               "value": {
@@ -247,7 +247,7 @@
             "value": "@replace(replace(pipeline().parameters.ComputeName,'-','_'),' ','')",
             "type": "Expression"
           },
-          "capacityId": "e4eb626a-4082-4143-983d-6fc9284b74cd"
+          "capacityId": "DE64853E-33DA-45E0-BD95-4C45510C511F"
         }
       },
       {
@@ -328,7 +328,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       },
       {
@@ -461,7 +461,7 @@
               "database": "controlDB"
             },
             "externalReferences": {
-              "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+              "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
             }
           }
         }
@@ -712,7 +712,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+                "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
               }
             }
           ]
@@ -768,7 +768,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       },
       {
@@ -887,7 +887,7 @@
       },
       "SilverWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "2836d0c5-10d4-49c7-89d1-0b244cb04b34"
       }
     },
     "variables": {

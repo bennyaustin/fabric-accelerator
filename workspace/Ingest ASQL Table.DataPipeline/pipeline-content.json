@@ -68,7 +68,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       },
       {
@@ -122,7 +122,7 @@
                 "database": "WideWorldImporters"
               },
               "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+                "connection": "fb66c6c0-8b1c-4596-8f0a-0915c5bc90ba"
               }
             }
           },
@@ -214,7 +214,7 @@
               "database": "WideWorldImporters"
             },
             "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+              "connection": "fb66c6c0-8b1c-4596-8f0a-0915c5bc90ba"
             }
           }
         }
@@ -290,7 +290,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       },
       {
@@ -336,7 +336,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       },
       {
@@ -388,7 +388,7 @@
               "database": "controlDB"
             },
             "externalReferences": {
-              "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+              "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
             }
           }
         }
@@ -583,7 +583,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+                "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
               }
             }
           ]
@@ -632,7 +632,7 @@
               "database": "controlDB"
             },
             "externalReferences": {
-              "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+              "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
             }
           }
         }
@@ -883,7 +883,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+                "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
               }
             }
           ]
@@ -939,7 +939,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": "afd1a9b5-ded5-4cef-b3b7-fa947be4296b"
         }
       }
     ],
@@ -1057,7 +1057,7 @@
       },
       "BronzeWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "2836d0c5-10d4-49c7-89d1-0b244cb04b34"
       }
     },
     "variables": {
