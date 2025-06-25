@@ -1,5 +1,5 @@
-@description('Resource name storage account to which permissions are to be granted')
-param storage_name string
+//@description('Resource name storage account to which permissions are to be granted')
+//param storage_name string
 
 @description('Resource group of storage account')
 param storage_rg string
