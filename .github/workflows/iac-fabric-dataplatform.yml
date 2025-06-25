@@ -23,7 +23,7 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         scope: subscription
-        region: australiaeast
+        region: westus
         subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
         template: iac/bicep/main.bicep
         # parameters: 'k1=v1 k2=v2 k3=v3'
