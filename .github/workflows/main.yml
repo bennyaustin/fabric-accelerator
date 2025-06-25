@@ -32,6 +32,7 @@ jobs:
           az deployment sub validate \
             --location westus \
             --template-file iac/bicep/main.bicep \
+            --no-prompt \
             --debug
 
       - name: Deploy Bicep Template
@@ -39,4 +40,5 @@ jobs:
           az deployment sub create \
             --location westus \
             --template-file iac/bicep/main.bicep \
+            --no-prompt \
             --debug
