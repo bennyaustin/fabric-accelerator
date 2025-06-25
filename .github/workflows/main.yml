@@ -29,16 +29,22 @@ jobs:
 
       - name: Validate Bicep Template
         run: |
+          DEPLOYMENT_NAME="validate-$(date +%s)"
           az deployment sub validate \
+            --name $DEPLOYMENT_NAME \
+            --location westus \
+            --template-file iac/bicep/main.bicep \
+            --no-prompt \
+            --debug
+      
+      - name: Deploy Bicep Template
+        run: |
+          DEPLOYMENT_NAME="deploy-$(date +%s)"
+          az deployment sub create \
+            --name $DEPLOYMENT_NAME \
             --location westus \
             --template-file iac/bicep/main.bicep \
             --no-prompt \
             --debug
 
-      - name: Deploy Bicep Template
-        run: |
-          az deployment sub create \
-            --location westus \
-            --template-file iac/bicep/main.bicep \
-            --no-prompt \
-            --debug
+
