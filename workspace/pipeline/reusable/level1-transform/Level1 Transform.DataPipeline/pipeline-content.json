@@ -67,7 +67,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": ""
         }
       },
       {
@@ -93,7 +93,7 @@
             "value": "@pipeline().parameters.ComputeName",
             "type": "Expression"
           },
-          "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+          "workspaceId": "9d97501b-2b77-440e-bd64-6493b1a52b94",
           "parameters": {
             "L1TransformInstanceID": {
               "value": {
@@ -247,7 +247,7 @@
             "value": "@replace(replace(pipeline().parameters.ComputeName,'-','_'),' ','')",
             "type": "Expression"
           },
-          "capacityId": "e4eb626a-4082-4143-983d-6fc9284b74cd"
+          "capacityId": "96B2D992-49E0-4191-BC84-37CBD808B670"
         }
       },
       {
@@ -328,7 +328,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": ""
         }
       },
       {
@@ -461,7 +461,7 @@
               "database": "controlDB"
             },
             "externalReferences": {
-              "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+              "connection": ""
             }
           }
         }
@@ -712,7 +712,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+                "connection": ""
               }
             }
           ]
@@ -768,7 +768,7 @@
           }
         },
         "externalReferences": {
-          "connection": "91ecdff4-3ab7-4bbb-b6e0-682881c0540d"
+          "connection": ""
         }
       },
       {
@@ -887,7 +887,7 @@
       },
       "SilverWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "9d97501b-2b77-440e-bd64-6493b1a52b94"
       }
     },
     "variables": {
