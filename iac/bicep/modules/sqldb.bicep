@@ -40,7 +40,7 @@ param enable_audit bool = false
 param purview_resource object
 
 @description('Resource name of audit storage account.')
-param audit_storage_name string
+param audit_storage_name string = 'StorageNameHere'
 
 @description('Resource group of audit storage account is deployed')
 param auditrg string
