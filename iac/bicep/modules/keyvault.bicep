@@ -16,8 +16,12 @@ param sme_tag string
 param keyvault_name string
 
 // Variables
+// var suffix = uniqueString(resourceGroup().id)
+// var keyvault_uniquename = '${keyvault_name}-${suffix}'
 var suffix = uniqueString(resourceGroup().id)
-var keyvault_uniquename = '${keyvault_name}-${suffix}'
+var cleanSuffix = toLower(replace(suffix, '-', ''))
+var baseName = toLower(replace(keyvault_name, '-', ''))
+var keyvault_uniquename = substring('${baseName}${cleanSuffix}', 0, 24) 
 
 // Create Key Vault
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' ={
