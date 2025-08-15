@@ -15,7 +15,7 @@ param fabric_capacity_admin_email string
 param cost_centre_tag string = 'DEVTESTFABRIC'
 
 @description('System Owner tag that will be applied to all resources in this deployment')
-param owner_tag string = 'whirlpool@contoso.com'
+param owner_tag string = 'jgraber@irthsolutions.com'
 
 @description('Subject Matter EXpert (SME) tag that will be applied to all resources in this deployment')
 param sme_tag string ='jgraber@irthsolutions.com'
