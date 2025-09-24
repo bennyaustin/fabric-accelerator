@@ -1,0 +1,4 @@
+{
+  "retentionTimeInDays": 90,
+  "eventThroughputLevel": "Low"
+}
