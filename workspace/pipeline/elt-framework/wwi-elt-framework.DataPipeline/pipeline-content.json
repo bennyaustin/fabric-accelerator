@@ -26,7 +26,7 @@
                 "database": "WideWorldImporters"
               },
               "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+                "connection": "137ccd86-5ba6-4435-bdb9-7fe285c4ff5d"
               }
             }
           },
@@ -49,10 +49,10 @@
               "typeProperties": {
                 "schema": "ELT",
                 "table": "IngestDefinition",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB (fabaccel/controlDB)"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
               }
             }
           },
@@ -293,10 +293,10 @@
               "type": "AzureSqlTable",
               "schema": [],
               "typeProperties": {
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB (fabaccel/controlDB)"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
               }
             }
           },
@@ -321,10 +321,10 @@
               "typeProperties": {
                 "schema": "ELT",
                 "table": "L1TransformDefinition",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB (fabaccel/controlDB)"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
               }
             }
           },
@@ -538,7 +538,7 @@
               "database": "WideWorldImporters"
             },
             "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+              "connection": "137ccd86-5ba6-4435-bdb9-7fe285c4ff5d"
             }
           }
         }
@@ -617,10 +617,10 @@
                     }
                   }
                 ],
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB (fabaccel/controlDB)"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
               }
             }
           ]
@@ -666,10 +666,10 @@
             }
           ],
           "scriptBlockExecutionTimeout": "02:00:00",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+          "database": "controlDB (fabaccel/controlDB)"
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
         }
       },
       {
@@ -715,10 +715,10 @@
             }
           ],
           "scriptBlockExecutionTimeout": "02:00:00",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+          "database": "controlDB (fabaccel/controlDB)"
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
         }
       }
     ],

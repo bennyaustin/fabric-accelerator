@@ -21,7 +21,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[InsertIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB (fabaccel/controlDB)",
           "storedProcedureParameters": {
             "ADFPipelineRunID": {
               "value": {
@@ -68,7 +68,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
         }
       },
       {
@@ -122,7 +122,7 @@
                 "database": "WideWorldImporters"
               },
               "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+                "connection": "137ccd86-5ba6-4435-bdb9-7fe285c4ff5d"
               }
             }
           },
@@ -214,7 +214,7 @@
               "database": "WideWorldImporters"
             },
             "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+              "connection": "137ccd86-5ba6-4435-bdb9-7fe285c4ff5d"
             }
           }
         }
@@ -239,7 +239,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB (fabaccel/controlDB)",
           "storedProcedureParameters": {
             "ADFIngestPipelineRunID": {
               "value": {
@@ -290,7 +290,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
         }
       },
       {
@@ -313,7 +313,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB (fabaccel/controlDB)",
           "storedProcedureParameters": {
             "ADFIngestPipelineRunID": {
               "value": {
@@ -336,7 +336,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
         }
       },
       {
@@ -385,10 +385,10 @@
             "type": "AzureSqlTable",
             "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controlDB (fabaccel/controlDB)"
             },
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
             }
           }
         }
@@ -424,7 +424,7 @@
               },
               "typeProperties": {
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L1]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+                "database": "controlDB (fabaccel/controlDB)",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -583,7 +583,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
               }
             }
           ]
@@ -629,10 +629,10 @@
             "type": "AzureSqlTable",
             "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controlDB (fabaccel/controlDB)"
             },
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
             }
           }
         }
@@ -668,7 +668,7 @@
               },
               "typeProperties": {
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L2]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+                "database": "controlDB (fabaccel/controlDB)",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -883,7 +883,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
               }
             }
           ]
@@ -909,7 +909,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateIngestDefinition]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB (fabaccel/controlDB)",
           "storedProcedureParameters": {
             "IngestID": {
               "value": {
@@ -939,7 +939,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "78bc750f-3f3c-4a7d-a96f-ec45181ed6a2"
         }
       }
     ],
@@ -1057,7 +1057,7 @@
       },
       "BronzeWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "ec8c533b-0c7b-4cbf-b081-b02bcd4894da"
       }
     },
     "variables": {
