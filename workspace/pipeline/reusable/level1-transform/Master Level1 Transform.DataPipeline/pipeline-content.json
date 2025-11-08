@@ -43,11 +43,11 @@
           "datasetSettings": {
             "type": "AzureSqlTable",
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
             },
             "schema": [],
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
             },
             "annotations": []
           },
@@ -199,9 +199,7 @@
         "dependsOn": [
           {
             "activity": "Get Level1 Transform Instances",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ]
       }
@@ -229,7 +227,7 @@
       },
       "SilverWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "e3f8ee26-b284-4338-816c-74b3a90c847c"
       }
     }
   }

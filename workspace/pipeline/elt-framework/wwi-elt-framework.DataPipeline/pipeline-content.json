@@ -26,7 +26,7 @@
                 "database": "WideWorldImporters"
               },
               "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+                "connection": "f2e8b17c-cf63-4267-a080-57b4790289f0"
               }
             }
           },
@@ -35,10 +35,7 @@
             "writeBehavior": "upsert",
             "upsertSettings": {
               "useTempDB": true,
-              "keys": [
-                "SourceSystemName",
-                "StreamName"
-              ]
+              "keys": ["SourceSystemName", "StreamName"]
             },
             "sqlWriterUseTableLock": false,
             "disableMetricsCollection": false,
@@ -49,10 +46,10 @@
               "typeProperties": {
                 "schema": "ELT",
                 "table": "IngestDefinition",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           },
@@ -270,9 +267,7 @@
         "dependsOn": [
           {
             "activity": "WWI_Ingest_Definition",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -293,10 +288,10 @@
               "type": "AzureSqlTable",
               "schema": [],
               "typeProperties": {
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           },
@@ -321,10 +316,10 @@
               "typeProperties": {
                 "schema": "ELT",
                 "table": "L1TransformDefinition",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           },
@@ -510,9 +505,7 @@
         "dependsOn": [
           {
             "activity": "WWI_L1T_Definition",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -538,7 +531,7 @@
               "database": "WideWorldImporters"
             },
             "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+              "connection": "f2e8b17c-cf63-4267-a080-57b4790289f0"
             }
           }
         }
@@ -549,15 +542,11 @@
         "dependsOn": [
           {
             "activity": "Get WWI PK cols",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           },
           {
             "activity": "Update Notebook ID",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "typeProperties": {
@@ -617,10 +606,10 @@
                     }
                   }
                 ],
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           ]
@@ -632,9 +621,7 @@
         "dependsOn": [
           {
             "activity": "WWI_L1T_Definition",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -666,10 +653,10 @@
             }
           ],
           "scriptBlockExecutionTimeout": "02:00:00",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -678,9 +665,7 @@
         "dependsOn": [
           {
             "activity": "ForEach PK",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -715,10 +700,10 @@
             }
           ],
           "scriptBlockExecutionTimeout": "02:00:00",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       }
     ],

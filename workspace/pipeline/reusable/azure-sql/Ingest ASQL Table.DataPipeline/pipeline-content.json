@@ -7,9 +7,7 @@
         "dependsOn": [
           {
             "activity": "Set RunID",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -21,7 +19,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[InsertIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "ADFPipelineRunID": {
               "value": {
@@ -68,7 +66,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -93,9 +91,7 @@
         "dependsOn": [
           {
             "activity": "Insert Ingest Instance - RUNNING",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -122,7 +118,7 @@
                 "database": "WideWorldImporters"
               },
               "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+                "connection": "f2e8b17c-cf63-4267-a080-57b4790289f0"
               }
             }
           },
@@ -184,9 +180,7 @@
         "dependsOn": [
           {
             "activity": "Insert Ingest Instance - RUNNING",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -214,7 +208,7 @@
               "database": "WideWorldImporters"
             },
             "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+              "connection": "f2e8b17c-cf63-4267-a080-57b4790289f0"
             }
           }
         }
@@ -225,9 +219,7 @@
         "dependsOn": [
           {
             "activity": "Update High Watermark",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -239,7 +231,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "ADFIngestPipelineRunID": {
               "value": {
@@ -290,7 +282,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -299,9 +291,7 @@
         "dependsOn": [
           {
             "activity": "Copy Source to Lakehouse",
-            "dependencyConditions": [
-              "Failed"
-            ]
+            "dependencyConditions": ["Failed"]
           }
         ],
         "policy": {
@@ -313,7 +303,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "ADFIngestPipelineRunID": {
               "value": {
@@ -336,7 +326,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -345,15 +335,11 @@
         "dependsOn": [
           {
             "activity": "Get High Watermark",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           },
           {
             "activity": "Copy Source to Lakehouse",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -385,10 +371,10 @@
             "type": "AzureSqlTable",
             "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
             },
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
             }
           }
         }
@@ -399,9 +385,7 @@
         "dependsOn": [
           {
             "activity": "Get Level 1 Transform Config",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "typeProperties": {
@@ -424,7 +408,7 @@
               },
               "typeProperties": {
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L1]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -583,7 +567,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           ]
@@ -595,9 +579,7 @@
         "dependsOn": [
           {
             "activity": "ForEach Level 1 Config",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -629,10 +611,10 @@
             "type": "AzureSqlTable",
             "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
             },
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
             }
           }
         }
@@ -643,9 +625,7 @@
         "dependsOn": [
           {
             "activity": "Get Level 2 Transform Config",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "typeProperties": {
@@ -668,7 +648,7 @@
               },
               "typeProperties": {
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L2]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -883,7 +863,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           ]
@@ -895,9 +875,7 @@
         "dependsOn": [
           {
             "activity": "ForEach Level 2 Config",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -909,7 +887,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateIngestDefinition]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "IngestID": {
               "value": {
@@ -939,7 +917,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       }
     ],
@@ -1057,7 +1035,7 @@
       },
       "BronzeWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "e3f8ee26-b284-4338-816c-74b3a90c847c"
       }
     },
     "variables": {

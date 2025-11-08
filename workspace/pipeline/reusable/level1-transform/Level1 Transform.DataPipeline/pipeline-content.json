@@ -23,9 +23,7 @@
         "dependsOn": [
           {
             "activity": "Set RunID",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -37,7 +35,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateTransformInstance_L1]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "L1TransformADFPipelineRunID": {
               "value": {
@@ -67,7 +65,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -76,9 +74,7 @@
         "dependsOn": [
           {
             "activity": "Level1 Transform RUNNING",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -93,7 +89,7 @@
             "value": "@pipeline().parameters.ComputeName",
             "type": "Expression"
           },
-          "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+          "workspaceId": "e3f8ee26-b284-4338-816c-74b3a90c847c",
           "parameters": {
             "L1TransformInstanceID": {
               "value": {
@@ -247,7 +243,7 @@
             "value": "@replace(replace(pipeline().parameters.ComputeName,'-','_'),' ','')",
             "type": "Expression"
           },
-          "capacityId": "e4eb626a-4082-4143-983d-6fc9284b74cd"
+          "capacityId": "FBD0BD29-5BA9-4CEC-BA2F-3A2A84C8ACBD"
         }
       },
       {
@@ -256,9 +252,7 @@
         "dependsOn": [
           {
             "activity": "ForEach Level 2 Config",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -270,7 +264,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateTransformInstance_L1]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "IngestCount": {
               "value": {
@@ -328,7 +322,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -337,9 +331,7 @@
         "dependsOn": [
           {
             "activity": "Level 1 Transform Notebook",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -360,9 +352,7 @@
         "dependsOn": [
           {
             "activity": "Level 1 Transform Notebook",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -383,9 +373,7 @@
         "dependsOn": [
           {
             "activity": "Level 1 Transform Notebook",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -406,27 +394,19 @@
         "dependsOn": [
           {
             "activity": "Set numTargetRowsInserted",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           },
           {
             "activity": "Set numSourceRows",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           },
           {
             "activity": "Set numTargetRowsUpdated",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           },
           {
             "activity": "Set numTargetRowsDeleted",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -458,10 +438,10 @@
             "type": "AzureSqlTable",
             "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb"
             },
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
             }
           }
         }
@@ -472,9 +452,7 @@
         "dependsOn": [
           {
             "activity": "Get Level 2 Transform Config",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "typeProperties": {
@@ -497,7 +475,7 @@
               },
               "typeProperties": {
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L2]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+                "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -712,7 +690,7 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
               }
             }
           ]
@@ -724,9 +702,7 @@
         "dependsOn": [
           {
             "activity": "Level 1 Transform Notebook",
-            "dependencyConditions": [
-              "Failed"
-            ]
+            "dependencyConditions": ["Failed"]
           }
         ],
         "policy": {
@@ -738,7 +714,7 @@
         },
         "typeProperties": {
           "storedProcedureName": "[ELT].[UpdateTransformInstance_L1]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
+          "database": "controlDB-fa154eba-2f8c-4125-ad05-41185e515acb",
           "storedProcedureParameters": {
             "L1TransformADFPipelineRunID": {
               "value": {
@@ -768,7 +744,7 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2"
         }
       },
       {
@@ -777,9 +753,7 @@
         "dependsOn": [
           {
             "activity": "Level 1 Transform Notebook",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
+            "dependencyConditions": ["Succeeded"]
           }
         ],
         "policy": {
@@ -887,7 +861,7 @@
       },
       "SilverWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "e3f8ee26-b284-4338-816c-74b3a90c847c"
       }
     },
     "variables": {

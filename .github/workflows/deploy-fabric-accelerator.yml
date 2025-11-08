@@ -1,5 +1,5 @@
 name: Deploy Fabric Accelerator
-on: workflow_dispatch 
+on: workflow_dispatch
 env:
   WORKSPACE_NAME: testws
   FABRIC_CAPACITY_NAME: bafabric014e4fwwm2ufole
@@ -9,170 +9,169 @@ env:
   BRONZE_LH: bronze_lh_test
   SILVER_LH: silver_lh_test
   GOLD_DW: gold_dw_test
-  WIDE_WORLD_IMPORTERS_CONNECTION_ID: a0a57e51-5032-4e46-b0f0-493c9d2f51c9
+  WIDE_WORLD_IMPORTERS_CONNECTION_ID: f2e8b17c-cf63-4267-a080-57b4790289f0
 
 jobs:
   deploy-fabric-accelerator:
     env:
-     NEW_FABRIC_CAPACITY_ID: null
-     NEW_FABRIC_WORKSPACE_ID: null
-     NEW_CONTROLDB_NAME: null
-     NEW_CONTROLDB_CONNECTION_ID: null
-     NEW_BRONZE_LH_ID: null
-     NEW_SILVER_LH_ID: null
-     NEW_GOLD_DW_ID: null
+      NEW_FABRIC_CAPACITY_ID: null
+      NEW_FABRIC_WORKSPACE_ID: null
+      NEW_CONTROLDB_NAME: null
+      NEW_CONTROLDB_CONNECTION_ID: null
+      NEW_BRONZE_LH_ID: null
+      NEW_SILVER_LH_ID: null
+      NEW_GOLD_DW_ID: null
 
-     OLD_FABRIC_CAPACITY_ID: e4eb626a-4082-4143-983d-6fc9284b74cd
-     OLD_FABRIC_WORKSPACE_ID: 8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec
-     OLD_FABRIC_WORKSPACE_ID1: 00000000-0000-0000-0000-000000000000
-     OLD_CONTROLDB_NAME: controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7
-     OLD_CONTROLDB_CONNECTION_ID: 78e8d795-a55c-412e-9b76-47ba404b4d51
-     OLD_BRONZE_LH_ID: c6c5024f-de55-45ca-a79a-decbe16235e3
-     OLD_SILVER_LH_ID: cc80a0ab-603d-4df9-bdfc-c35a7e8ab095
-     OLD_GOLD_DW_ID: 7e2bbf6b-43fb-498c-90e3-56199c8c3b5e
-     OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID: a0a57e51-5032-4e46-b0f0-493c9d2f51c9
-     OLD_TENANT_ID: 4e921ed2-9b1c-457c-a917-16ef468eb90a
+      OLD_FABRIC_CAPACITY_ID: FBD0BD29-5BA9-4CEC-BA2F-3A2A84C8ACBD
+      OLD_FABRIC_WORKSPACE_ID: e3f8ee26-b284-4338-816c-74b3a90c847c
+      OLD_FABRIC_WORKSPACE_ID1: e3f8ee26-b284-4338-816c-74b3a90c847c
+      OLD_CONTROLDB_NAME: controlDB-fa154eba-2f8c-4125-ad05-41185e515acb
+      OLD_CONTROLDB_CONNECTION_ID: ca6ffdd3-8e27-4869-bbc6-3a3672f2d1c2
+      OLD_BRONZE_LH_ID: c6c5024f-de55-45ca-a79a-decbe16235e3
+      OLD_SILVER_LH_ID: cc80a0ab-603d-4df9-bdfc-c35a7e8ab095
+      OLD_GOLD_DW_ID: 7e2bbf6b-43fb-498c-90e3-56199c8c3b5e
+      OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID: f2e8b17c-cf63-4267-a080-57b4790289f0
+      OLD_TENANT_ID: 9e6fe9e3-be00-4861-9c4c-3a06d800dafd
 
     runs-on: ubuntu-latest
     steps:
+      # Checkout code
+      - uses: actions/checkout@v3
 
-        # Checkout code
-        - uses: actions/checkout@v3   
+      # Python Version Pre-Requisites
+      - name: Fabric CLI Python Pre-Requisites
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
 
-        # Python Version Pre-Requisites
-        - name: Fabric CLI Python Pre-Requisites
-          uses: actions/setup-python@v4
-          with:
-            python-version: 3.12
-       
-       # Install Fabric CLI 
-        - name: Install Fabric CLI
-          run: pip install ms-fabric-cli
+      # Install Fabric CLI
+      - name: Install Fabric CLI
+        run: pip install ms-fabric-cli
 
-       # Authenticate using Service Principal
-        - name: Authenticate to Fabric
-          run: |
-            fab config set encryption_fallback_enabled true
-            fab auth login -u ${{ secrets.ACTION_SPN_CLIENTID }} -p ${{ secrets.ACTION_SPN_SECRET }} --tenant ${{ secrets.TENANT_ID }} 
+      # Authenticate using Service Principal
+      - name: Authenticate to Fabric
+        run: |
+          fab config set encryption_fallback_enabled true
+          fab auth login -u ${{ secrets.ACTION_SPN_CLIENTID }} -p ${{ secrets.ACTION_SPN_SECRET }} --tenant ${{ secrets.TENANT_ID }}
 
-       # Create Workspace if it does not exist
-        - name: Create Workspace if it does not exist
-          run: |
-            WorkspaceExists=$(fab exists $WORKSPACE_NAME.Workspace | tr -d '[:space:]')
-            echo "WorkspaceExists: $WorkspaceExists"
-            if [ "$WorkspaceExists" != "*true" ]; then
-              fab create $WORKSPACE_NAME.Workspace -P capacityName=$FABRIC_CAPACITY_NAME
-              fab acl set $WORKSPACE_NAME.Workspace -I $WORKSPACE_ADMIN_ID -R admin -f
-              fab acl set $WORKSPACE_NAME.Workspace -I $WORKSPACE_COLLABORATOR_ID -R contributor -f
-            fi 
+      # Create Workspace if it does not exist
+      - name: Create Workspace if it does not exist
+        run: |
+          WorkspaceExists=$(fab exists $WORKSPACE_NAME.Workspace | tr -d '[:space:]')
+          echo "WorkspaceExists: $WorkspaceExists"
+          if [ "$WorkspaceExists" != "*true" ]; then
+            fab create $WORKSPACE_NAME.Workspace -P capacityName=$FABRIC_CAPACITY_NAME
+            fab acl set $WORKSPACE_NAME.Workspace -I $WORKSPACE_ADMIN_ID -R admin -f
+            fab acl set $WORKSPACE_NAME.Workspace -I $WORKSPACE_COLLABORATOR_ID -R contributor -f
+          fi
 
-       # Create Folders if they do not exist
-        - name: Create folders if they do not exist
-          run: |  
-              fab exists $WORKSPACE_NAME.Workspace/elt-framework.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/elt-framework.Folder
-              fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder
-              fab exists $WORKSPACE_NAME.Workspace/warehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/warehouse.Folder
+      # Create Folders if they do not exist
+      - name: Create folders if they do not exist
+        run: |
+          fab exists $WORKSPACE_NAME.Workspace/elt-framework.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/elt-framework.Folder
+          fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder
+          fab exists $WORKSPACE_NAME.Workspace/warehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/warehouse.Folder
 
-       # Create Fabric SQL database if it does not exist
-        - name: Create FSQL DB if it does not exist
-          run: |
-              fab exists $WORKSPACE_NAME.Workspace/elt-framework.Folder/$FABRIC_SQL_DB_NAME.SQLDatabase | grep -q true || fab create $WORKSPACE_NAME.Workspace/elt-framework.Folder/$FABRIC_SQL_DB_NAME.SQLDatabase
-       # Create Fabric SQL database connection if it does not exist
-        - name: Create FSQL DB Connection if it does not exist
-          run: |
-              FSQLConnExists=$(fab exists .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection | tr -d '[:space:]')
-              echo "FSQLConnExists: $FSQLConnExists"
-              if [ "$FSQLConnExists" != "*true" ]; then
-                server=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.serverFqdn| tr -d '\r')
-                database=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName| tr -d '\r') 
-                echo "Creating connection for server: $server and database: $database"
-                fab create .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -P connectionDetails.creationMethod=SQL,connectionDetails.type=SQL,connectionDetails.parameters.server=$server,connectionDetails.parameters.database=$database,credentialDetails.type=ServicePrincipal,credentialDetails.servicePrincipalClientId=${{ secrets.ACTION_SPN_CLIENTID }},credentialDetails.servicePrincipalSecret=${{ secrets.ACTION_SPN_SECRET }},credentialDetails.tenantid=${{ secrets.TENANT_ID }} 
-                connectionID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id| tr -d '\r')
+      # Create Fabric SQL database if it does not exist
+      - name: Create FSQL DB if it does not exist
+        run: |
+          fab exists $WORKSPACE_NAME.Workspace/elt-framework.Folder/$FABRIC_SQL_DB_NAME.SQLDatabase | grep -q true || fab create $WORKSPACE_NAME.Workspace/elt-framework.Folder/$FABRIC_SQL_DB_NAME.SQLDatabase
+      # Create Fabric SQL database connection if it does not exist
+      - name: Create FSQL DB Connection if it does not exist
+        run: |
+          FSQLConnExists=$(fab exists .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection | tr -d '[:space:]')
+          echo "FSQLConnExists: $FSQLConnExists"
+          if [ "$FSQLConnExists" != "*true" ]; then
+            server=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.serverFqdn| tr -d '\r')
+            database=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName| tr -d '\r') 
+            echo "Creating connection for server: $server and database: $database"
+            fab create .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -P connectionDetails.creationMethod=SQL,connectionDetails.type=SQL,connectionDetails.parameters.server=$server,connectionDetails.parameters.database=$database,credentialDetails.type=ServicePrincipal,credentialDetails.servicePrincipalClientId=${{ secrets.ACTION_SPN_CLIENTID }},credentialDetails.servicePrincipalSecret=${{ secrets.ACTION_SPN_SECRET }},credentialDetails.tenantid=${{ secrets.TENANT_ID }} 
+            connectionID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id| tr -d '\r')
 
-                rolejson=$(jq -n --arg id "$WORKSPACE_ADMIN_ID" '{"principal": {"id": $id, "type": "Group"}, "role": "Owner"}')
-                echo "Assigning role to connection: $rolejson"
-                fab api -X post "connections/$connectionID/roleAssignments" -i "$rolejson"
-                
-                rolejson=$(jq -n --arg id "$WORKSPACE_COLLABORATOR_ID" '{"principal": {"id": $id, "type": "Group"}, "role": "Owner"}')
-                echo "Assigning role to connection: $rolejson"
-                fab api -X post "connections/$connectionID/roleAssignments" -i "$rolejson"
-              fi
-          # Create Medallion Layers if they do not exist
-        - name: Create Medallion Layers if they do not exist
-          run: |
-              BronzeLHExists=$(fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder/$BRONZE_LH.Lakehouse | tr -d '[:space:]')
-              echo "BronzeLHExists: $BronzeLHExists"
-              if [ "$BronzeLHExists" != "*true" ]; then
-                fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder/$BRONZE_LH.Lakehouse -P enableSchemas=true
-              fi 
+            rolejson=$(jq -n --arg id "$WORKSPACE_ADMIN_ID" '{"principal": {"id": $id, "type": "Group"}, "role": "Owner"}')
+            echo "Assigning role to connection: $rolejson"
+            fab api -X post "connections/$connectionID/roleAssignments" -i "$rolejson"
+            
+            rolejson=$(jq -n --arg id "$WORKSPACE_COLLABORATOR_ID" '{"principal": {"id": $id, "type": "Group"}, "role": "Owner"}')
+            echo "Assigning role to connection: $rolejson"
+            fab api -X post "connections/$connectionID/roleAssignments" -i "$rolejson"
+          fi
+        # Create Medallion Layers if they do not exist
+      - name: Create Medallion Layers if they do not exist
+        run: |
+          BronzeLHExists=$(fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder/$BRONZE_LH.Lakehouse | tr -d '[:space:]')
+          echo "BronzeLHExists: $BronzeLHExists"
+          if [ "$BronzeLHExists" != "*true" ]; then
+            fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder/$BRONZE_LH.Lakehouse -P enableSchemas=true
+          fi 
 
-              SilverLHExists=$(fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder/$SILVER_LH.Lakehouse | tr -d '[:space:]')
-              echo "SilverLHExists: $SilverLHExists"
-              if [ "$SilverLHExists" != "*true" ]; then
-                fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder/$SILVER_LH.Lakehouse -P enableSchemas=true
-              fi 
+          SilverLHExists=$(fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder/$SILVER_LH.Lakehouse | tr -d '[:space:]')
+          echo "SilverLHExists: $SilverLHExists"
+          if [ "$SilverLHExists" != "*true" ]; then
+            fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder/$SILVER_LH.Lakehouse -P enableSchemas=true
+          fi 
 
-              GoldDWExists=$(fab exists $WORKSPACE_NAME.Workspace/warehouse.Folder/$GOLD_DW.Warehouse | tr -d '[:space:]')
-              echo "GoldDWExists: $GoldDWExists"
-              if [ "$GoldDWExists" != "*true" ]; then
-                fab create $WORKSPACE_NAME.Workspace/warehouse.Folder/$GOLD_DW.Warehouse
-              fi
-        #   Import Fabric Accelerator Artifacts
-        - name: Import Fabric Accelerator Artifacts
-          run: |
-              NEW_FABRIC_CAPACITY_ID=$(fab get $WORKSPACE_NAME.Workspace -q capacityId | tr -d '\r')
-              NEW_FABRIC_WORKSPACE_ID=$(fab get $WORKSPACE_NAME.Workspace -q id | tr -d '\r')
-              NEW_CONTROLDB_NAME=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName| tr -d '\r')
-              NEW_CONTROLDB_CONNECTION_ID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id | tr -d '\r')
-              NEW_BRONZE_LH_ID=$(fab get $WORKSPACE_NAME.Workspace/$BRONZE_LH.Lakehouse -q id | tr -d '\r')
-              NEW_SILVER_LH_ID=$(fab get $WORKSPACE_NAME.Workspace/$SILVER_LH.Lakehouse -q id | tr -d '\r')
-              NEW_GOLD_DW_ID=$(fab get $WORKSPACE_NAME.Workspace/$GOLD_DW.Warehouse -q id | tr -d '\r')
+          GoldDWExists=$(fab exists $WORKSPACE_NAME.Workspace/warehouse.Folder/$GOLD_DW.Warehouse | tr -d '[:space:]')
+          echo "GoldDWExists: $GoldDWExists"
+          if [ "$GoldDWExists" != "*true" ]; then
+            fab create $WORKSPACE_NAME.Workspace/warehouse.Folder/$GOLD_DW.Warehouse
+          fi
+      #   Import Fabric Accelerator Artifacts
+      - name: Import Fabric Accelerator Artifacts
+        run: |
+          NEW_FABRIC_CAPACITY_ID=$(fab get $WORKSPACE_NAME.Workspace -q capacityId | tr -d '\r')
+          NEW_FABRIC_WORKSPACE_ID=$(fab get $WORKSPACE_NAME.Workspace -q id | tr -d '\r')
+          NEW_CONTROLDB_NAME=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName| tr -d '\r')
+          NEW_CONTROLDB_CONNECTION_ID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id | tr -d '\r')
+          NEW_BRONZE_LH_ID=$(fab get $WORKSPACE_NAME.Workspace/$BRONZE_LH.Lakehouse -q id | tr -d '\r')
+          NEW_SILVER_LH_ID=$(fab get $WORKSPACE_NAME.Workspace/$SILVER_LH.Lakehouse -q id | tr -d '\r')
+          NEW_GOLD_DW_ID=$(fab get $WORKSPACE_NAME.Workspace/$GOLD_DW.Warehouse -q id | tr -d '\r')
 
-              echo "Replacing OLD ID with NEW ID in workspace files"
+          echo "Replacing OLD ID with NEW ID in workspace files"
 
-              echo "Files to be updated from $OLD_FABRIC_CAPACITY_ID to $NEW_FABRIC_CAPACITY_ID"
-              grep --null -rl "$OLD_FABRIC_CAPACITY_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_FABRIC_CAPACITY_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_FABRIC_CAPACITY_ID/$NEW_FABRIC_CAPACITY_ID/g"
-             
-              echo "Files to be updated from $OLD_FABRIC_WORKSPACE_ID to $NEW_FABRIC_WORKSPACE_ID"
-              grep --null -rl "$OLD_FABRIC_WORKSPACE_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_FABRIC_WORKSPACE_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_FABRIC_WORKSPACE_ID/$NEW_FABRIC_WORKSPACE_ID/g"
+          echo "Files to be updated from $OLD_FABRIC_CAPACITY_ID to $NEW_FABRIC_CAPACITY_ID"
+          grep --null -rl "$OLD_FABRIC_CAPACITY_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_FABRIC_CAPACITY_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_FABRIC_CAPACITY_ID/$NEW_FABRIC_CAPACITY_ID/g"
 
-              echo "Files to be updated from $OLD_FABRIC_WORKSPACE_ID1 to $NEW_FABRIC_WORKSPACE_ID"
-              grep --null -rl "$OLD_FABRIC_WORKSPACE_ID1" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_FABRIC_WORKSPACE_ID1 ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_FABRIC_WORKSPACE_ID1/$NEW_FABRIC_WORKSPACE_ID/g"
+          echo "Files to be updated from $OLD_FABRIC_WORKSPACE_ID to $NEW_FABRIC_WORKSPACE_ID"
+          grep --null -rl "$OLD_FABRIC_WORKSPACE_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_FABRIC_WORKSPACE_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_FABRIC_WORKSPACE_ID/$NEW_FABRIC_WORKSPACE_ID/g"
 
-              echo "Files to be updated from $OLD_CONTROLDB_NAME to $NEW_CONTROLDB_NAME"
-              grep --null -rl "$OLD_CONTROLDB_NAME" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_CONTROLDB_NAME ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_CONTROLDB_NAME/$NEW_CONTROLDB_NAME/g"
+          echo "Files to be updated from $OLD_FABRIC_WORKSPACE_ID1 to $NEW_FABRIC_WORKSPACE_ID"
+          grep --null -rl "$OLD_FABRIC_WORKSPACE_ID1" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_FABRIC_WORKSPACE_ID1 ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_FABRIC_WORKSPACE_ID1/$NEW_FABRIC_WORKSPACE_ID/g"
 
-              echo "Files to be updated from $OLD_CONTROLDB_CONNECTION_ID to $NEW_CONTROLDB_CONNECTION_ID"
-              grep --null -rl "$OLD_CONTROLDB_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_CONTROLDB_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_CONTROLDB_CONNECTION_ID/$NEW_CONTROLDB_CONNECTION_ID/g"
-              
-              echo "Files to be updated from $OLD_BRONZE_LH_ID to $NEW_BRONZE_LH_ID"
-              grep --null -rl "$OLD_BRONZE_LH_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_BRONZE_LH_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_BRONZE_LH_ID/$NEW_BRONZE_LH_ID/g"
+          echo "Files to be updated from $OLD_CONTROLDB_NAME to $NEW_CONTROLDB_NAME"
+          grep --null -rl "$OLD_CONTROLDB_NAME" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_CONTROLDB_NAME ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_CONTROLDB_NAME/$NEW_CONTROLDB_NAME/g"
 
-              echo "Files to be updated from $OLD_SILVER_LH_ID to $NEW_SILVER_LH_ID"
-              grep --null -rl "$OLD_SILVER_LH_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_SILVER_LH_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_SILVER_LH_ID/$NEW_SILVER_LH_ID/g"
+          echo "Files to be updated from $OLD_CONTROLDB_CONNECTION_ID to $NEW_CONTROLDB_CONNECTION_ID"
+          grep --null -rl "$OLD_CONTROLDB_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_CONTROLDB_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_CONTROLDB_CONNECTION_ID/$NEW_CONTROLDB_CONNECTION_ID/g"
 
-              echo "Files to be updated from $OLD_GOLD_DW_ID to $NEW_GOLD_DW_ID"
-              grep --null -rl "$OLD_GOLD_DW_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_GOLD_DW_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_GOLD_DW_ID/$NEW_GOLD_DW_ID/g"
-             
-              echo "Files to be updated from $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID to $WIDE_WORLD_IMPORTERS_CONNECTION_ID"
-              grep --null -rl "$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID/$WIDE_WORLD_IMPORTERS_CONNECTION_ID/g"
+          echo "Files to be updated from $OLD_BRONZE_LH_ID to $NEW_BRONZE_LH_ID"
+          grep --null -rl "$OLD_BRONZE_LH_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_BRONZE_LH_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_BRONZE_LH_ID/$NEW_BRONZE_LH_ID/g"
 
-              echo "Files to be updated with new Tenant ID"
-              grep --null -rl "$OLD_TENANT_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_TENANT_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_TENANT_ID/${{ secrets.TENANT_ID }}/g"
+          echo "Files to be updated from $OLD_SILVER_LH_ID to $NEW_SILVER_LH_ID"
+          grep --null -rl "$OLD_SILVER_LH_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_SILVER_LH_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_SILVER_LH_ID/$NEW_SILVER_LH_ID/g"
 
-              set -x
-              fab import "$WORKSPACE_NAME.Workspace/EnvSettings.Notebook" -i "${GITHUB_WORKSPACE}/workspace/ipynb/EnvSettings.ipynb" --format .ipynb -f
-              set +x
+          echo "Files to be updated from $OLD_GOLD_DW_ID to $NEW_GOLD_DW_ID"
+          grep --null -rl "$OLD_GOLD_DW_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_GOLD_DW_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_GOLD_DW_ID/$NEW_GOLD_DW_ID/g"
+
+          echo "Files to be updated from $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID to $WIDE_WORLD_IMPORTERS_CONNECTION_ID"
+          grep --null -rl "$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID/$WIDE_WORLD_IMPORTERS_CONNECTION_ID/g"
+
+          echo "Files to be updated with new Tenant ID"
+          grep --null -rl "$OLD_TENANT_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+          grep --null -rl $OLD_TENANT_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_TENANT_ID/${{ secrets.TENANT_ID }}/g"
+
+          set -x
+          fab import "$WORKSPACE_NAME.Workspace/EnvSettings.Notebook" -i "${GITHUB_WORKSPACE}/workspace/ipynb/EnvSettings.ipynb" --format .ipynb -f
+          set +x
       # Logout
-        - name: Logout of Fabric
-          run: fab auth logout
+      - name: Logout of Fabric
+        run: fab auth logout

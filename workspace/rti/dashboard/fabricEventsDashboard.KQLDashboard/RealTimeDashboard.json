@@ -82,16 +82,9 @@
         "crossFilterDisabled": false,
         "drillthroughDisabled": true,
         "labelDisabled": false,
-        "pie__label": [
-          "name",
-          "percentage"
-        ],
+        "pie__label": ["name", "percentage"],
         "tooltipDisabled": false,
-        "pie__tooltip": [
-          "name",
-          "percentage",
-          "value"
-        ],
+        "pie__tooltip": ["name", "percentage", "value"],
         "pie__orderBy": "size",
         "pie__kind": "pie",
         "pie__topNSlices": null,
@@ -250,16 +243,9 @@
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "labelDisabled": false,
-        "pie__label": [
-          "name",
-          "percentage"
-        ],
+        "pie__label": ["name", "percentage"],
         "tooltipDisabled": false,
-        "pie__tooltip": [
-          "name",
-          "percentage",
-          "value"
-        ],
+        "pie__tooltip": ["name", "percentage", "value"],
         "pie__orderBy": "size",
         "pie__kind": "pie",
         "pie__topNSlices": null,
@@ -300,10 +286,7 @@
         "legendLocation": "bottom",
         "xColumnTitle": "",
         "xColumn": "itemName",
-        "yColumns": [
-          "avgjobDurationMin",
-          "instanceCount"
-        ],
+        "yColumns": ["avgjobDurationMin", "instanceCount"],
         "seriesColumns": null,
         "xAxisScale": "linear",
         "verticalLine": "",
@@ -341,16 +324,9 @@
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "labelDisabled": false,
-        "pie__label": [
-          "name",
-          "percentage"
-        ],
+        "pie__label": ["name", "percentage"],
         "tooltipDisabled": false,
-        "pie__tooltip": [
-          "name",
-          "percentage",
-          "value"
-        ],
+        "pie__tooltip": ["name", "percentage", "value"],
         "pie__orderBy": "size",
         "pie__kind": "pie",
         "pie__topNSlices": null,
@@ -393,9 +369,7 @@
               {
                 "operator": "==",
                 "column": "type",
-                "values": [
-                  "JobSucceeded"
-                ]
+                "values": ["JobSucceeded"]
               }
             ],
             "chainingOperator": "and",
@@ -416,9 +390,7 @@
               {
                 "operator": "==",
                 "column": "type",
-                "values": [
-                  "JobFailed"
-                ]
+                "values": ["JobFailed"]
               }
             ],
             "chainingOperator": "and",
@@ -439,9 +411,7 @@
               {
                 "operator": "==",
                 "column": "type",
-                "values": [
-                  "JobStatusChanged"
-                ]
+                "values": ["JobStatusChanged"]
               }
             ],
             "chainingOperator": "and",
@@ -661,9 +631,7 @@
               {
                 "operator": "==",
                 "column": "type",
-                "values": [
-                  "FileDeleted"
-                ]
+                "values": ["FileDeleted"]
               }
             ],
             "chainingOperator": "and",
@@ -684,9 +652,7 @@
               {
                 "operator": "==",
                 "column": "type",
-                "values": [
-                  "FolderDeleted"
-                ]
+                "values": ["FolderDeleted"]
               }
             ],
             "chainingOperator": "and",
@@ -724,16 +690,9 @@
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "labelDisabled": false,
-        "pie__label": [
-          "name",
-          "percentage"
-        ],
+        "pie__label": ["name", "percentage"],
         "tooltipDisabled": false,
-        "pie__tooltip": [
-          "name",
-          "percentage",
-          "value"
-        ],
+        "pie__tooltip": ["name", "percentage", "value"],
         "pie__orderBy": "size",
         "pie__kind": "pie",
         "pie__topNSlices": null,
@@ -772,16 +731,9 @@
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "labelDisabled": false,
-        "pie__label": [
-          "name",
-          "percentage"
-        ],
+        "pie__label": ["name", "percentage"],
         "tooltipDisabled": false,
-        "pie__tooltip": [
-          "name",
-          "percentage",
-          "value"
-        ],
+        "pie__tooltip": ["name", "percentage", "value"],
         "pie__orderBy": "size",
         "pie__kind": "pie",
         "pie__topNSlices": null,
@@ -1233,9 +1185,7 @@
       },
       "showOnPages": {
         "kind": "selection",
-        "pageIds": [
-          "cbdfaab8-dc4d-4a3e-937f-e097cd4dc96a"
-        ]
+        "pageIds": ["cbdfaab8-dc4d-4a3e-937f-e097cd4dc96a"]
       }
     },
     {
@@ -1251,9 +1201,7 @@
       },
       "showOnPages": {
         "kind": "selection",
-        "pageIds": [
-          "1da933f9-883a-459b-a6d5-ec4123ff3557"
-        ]
+        "pageIds": ["1da933f9-883a-459b-a6d5-ec4123ff3557"]
       }
     }
   ],
@@ -1265,7 +1213,7 @@
       "database": "b22b1edd-6292-97ea-4089-fe9314ea1177",
       "name": "kdb_fabricEvents",
       "id": "2505cb77-5a0e-49ed-8f65-9e0b9c774870",
-      "workspace": "00000000-0000-0000-0000-000000000000"
+      "workspace": "e3f8ee26-b284-4338-816c-74b3a90c847c"
     }
   ],
   "pages": [
@@ -1302,10 +1250,7 @@
       },
       "text": "materialized_view('dailyAggWorkspaceEvents')\n|where ['time'] between (_startTime .. _endTime )\n|summarize visits = sum(eventCount) by workspaceName\n|sort by visits desc \n|take 10",
       "id": "e4112015-78bc-4c25-a230-51cd154b4bc5",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1314,10 +1259,7 @@
       },
       "text": "materialized_view(\"dailyAggWorkspaceEvents\")\n|where [\"time\"] between (_startTime .._endTime )\n|summarize visits = sum(eventCount) by itemKind\n|sort by visits desc nulls first  \n|take 10",
       "id": "0b439ece-15d3-4055-bf46-4e3ba55cf8f3",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1326,10 +1268,7 @@
       },
       "text": "materialized_view(\"dailyAggWorkspaceEvents\")\n|where [\"time\"] between (_startTime .._endTime )\n|summarize visits = sum(eventCount) by itemName, itemKind\n|sort by visits desc nulls first",
       "id": "1c502fac-4858-401c-b342-b4cf4d61bd96",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1338,10 +1277,7 @@
       },
       "text": "materialized_view(\"dailyAggWorkspaceEvents\")\n|where [\"time\"] between (_startTime .._endTime )\n|extend shortType = replace_string(type,\"Microsoft.Fabric.Item\",\"\")\n|summarize visits = sum(eventCount) by shortType\n|sort by visits desc nulls first",
       "id": "21c7f5df-1a33-452e-a676-de2cd44bf482",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1350,10 +1286,7 @@
       },
       "text": "materialized_view(\"dailyAggWorkspaceEvents\")\n|where [\"time\"] between (_startTime .._endTime )\n|summarize visits = sum(eventCount) by executingPrincipalId, executingPrincipalType\n|sort by visits desc nulls first",
       "id": "9e76172c-55df-4e73-8614-4d5eb758152d",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1362,10 +1295,7 @@
       },
       "text": "materialized_view('dailyAggJobEvents')\n|where [\"time\"] between (_startTime .._endTime ) and jobStatus == 'Completed'\n|summarize jobs = count() by jobType",
       "id": "6ac98e77-95cf-4d74-837c-bf0ae3ab9cce",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1374,10 +1304,7 @@
       },
       "text": "materialized_view('dailyAggJobEvents')\n| where [\"time\"] between (_startTime .._endTime ) and jobStatus == \"Completed\"\n| extend jobDurationMin = datetime_diff('minute', jobEndTimeUtc,jobCreatedTimeUtc)\n| summarize avgjobDurationMin =round(avg(jobDurationMin)),\n            instanceCount = count() by itemName\n",
       "id": "2ea13ed9-0b5a-4f80-9eec-f9a6a7fb3a34",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1386,10 +1313,7 @@
       },
       "text": "materialized_view('dailyAggJobEvents')\n| where [\"time\"] between (_startTime .._endTime ) and jobStatus == \"Completed\"\n| summarize jobCount = count() by jobInvokeType\n\n",
       "id": "1b93a27f-e5b0-4108-9cdb-21b1b6c94d68",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1398,10 +1322,7 @@
       },
       "text": "jobEventsExpanded\n|where [\"time\"] between (_startTime .. _endTime)\n| summarize jobCount = count() by type= replace_string(type,\"Microsoft.Fabric.JobEvents.Item\",\"\"), workspaceName, itemName\n| order by jobCount desc nulls last \n",
       "id": "fedb3caa-2afe-4938-8301-178aea7b5da6",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1410,10 +1331,7 @@
       },
       "text": "materialized_view(\"dailyAggJobEvents\")\n|where [\"time\"] between (_startTime.._endTime)\n| summarize  jobcount= count() by bin(datetime_part('hour',jobScheduleTimeUtc), 1), itemName\n",
       "id": "2d278ed5-835d-4735-a29b-1cf97bc37a74",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1422,11 +1340,7 @@
       },
       "text": "let span = 1d;\nmaterialized_view(\"dailyAggJobEvents\")\n| where [\"time\"] between (_startTime .._endTime ) and isnotempty(itemName)\n| where itemName in (_itemName) or   isempty( _itemName)\n| extend jobDurationMin = datetime_diff('minute',jobEndTimeUtc,jobStartTimeUtc)\n| make-series tsDurationMin = avg(jobDurationMin) default=int(null) on [\"time\"] from _startTime to _endTime step span by itemName\n| extend tsDurationMin = series_fill_linear(tsDurationMin) //fill missing null values with linear interpolation\n| extend (anamolies, score,baseline) = series_decompose_anomalies(tsDurationMin,1.5,-1,\"linefit\")\n| project itemName,tsDurationMin, anamolies,[\"time\"]",
       "id": "c0aa748e-03e6-43fe-9461-6a2fb6019aca",
-      "usedVariables": [
-        "_endTime",
-        "_itemName",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_itemName", "_startTime"]
     },
     {
       "dataSource": {
@@ -1435,11 +1349,7 @@
       },
       "text": "materialized_view(\"dailyAggStorageEvents\")\n| where [\"time\"] between (_startTime .. _endTime)\n| where type in (_type) or isempty( _type)\n| summarize count = count() by bin([\"time\"],1d), type",
       "id": "169a4af7-e63f-41b8-935c-c9dd13c83cf4",
-      "usedVariables": [
-        "_endTime",
-        "_startTime",
-        "_type"
-      ]
+      "usedVariables": ["_endTime", "_startTime", "_type"]
     },
     {
       "dataSource": {
@@ -1448,11 +1358,7 @@
       },
       "text": "materialized_view(\"dailyAggStorageEvents\")\n| where [\"time\"] between (_startTime.._endTime)\n| where type in (_type) or isempty( _type)\n| summarize count = sum(oneLakeCount) by type, subject\n|order by  count desc ",
       "id": "975c1247-74e7-490c-8de1-db62f0125b8d",
-      "usedVariables": [
-        "_endTime",
-        "_startTime",
-        "_type"
-      ]
+      "usedVariables": ["_endTime", "_startTime", "_type"]
     },
     {
       "dataSource": {
@@ -1461,11 +1367,7 @@
       },
       "text": "materialized_view(\"dailyAggStorageEvents\")\n| where [\"time\"] between (_startTime.._endTime)\n| where type in (_type) or isempty( _type)\n// | extend shortType = replace_string(type,\"Microsoft.Fabric.OneLake.\",\"\")\n| summarize count = sum(oneLakeCount) by type\n",
       "id": "beecf507-7af4-49df-bcbb-a90f2873fe9d",
-      "usedVariables": [
-        "_endTime",
-        "_startTime",
-        "_type"
-      ]
+      "usedVariables": ["_endTime", "_startTime", "_type"]
     },
     {
       "dataSource": {
@@ -1474,11 +1376,7 @@
       },
       "text": "materialized_view(\"dailyAggStorageEvents\")\n| where [\"time\"] between (_startTime.._endTime)\n| where type in (_type) or isempty( _type)\n| summarize count = sum(oneLakeCount) by api, type\n",
       "id": "07e6d097-cdf8-4c33-bfd8-557549365f05",
-      "usedVariables": [
-        "_endTime",
-        "_startTime",
-        "_type"
-      ]
+      "usedVariables": ["_endTime", "_startTime", "_type"]
     },
     {
       "dataSource": {
@@ -1487,11 +1385,7 @@
       },
       "text": "let span = 1d;\nlet horizon = 14d;\nmaterialized_view(\"dailyAggJobEvents\")\n| where [\"time\"] between (_startTime .._endTime ) and isnotnull(itemName)\n| where itemName in (_itemName) or isempty( _itemName)\n| extend jobDurationMin = datetime_diff('minute',jobEndTimeUtc,jobStartTimeUtc)\n| make-series tsJobDurationMin = avg(jobDurationMin) default=int(null) on [\"time\"] from _startTime to _endTime+horizon step span by itemName\n| extend tsJobDurationMin = series_fill_linear(tsJobDurationMin) // fill missing null values with interpolated data\n| extend forecast = series_decompose_forecast(tsJobDurationMin,toint(horizon/span),-1,\"linefit\")",
       "id": "a4fbac09-2ae8-4d83-a415-cf7534c1a0ee",
-      "usedVariables": [
-        "_endTime",
-        "_itemName",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_itemName", "_startTime"]
     },
     {
       "dataSource": {
@@ -1500,11 +1394,7 @@
       },
       "text": "let span = 1d;\nmaterialized_view(\"dailyAggStorageEvents\")\n| where [\"time\"] between (_startTime .._endTime )\n| where type in (_type) or isempty( _type)\n| make-series tsCount = count() default=int(null) on [\"time\"] from _startTime to _endTime step span by type\n| extend tsCount = series_fill_linear(tsCount) // replace missing null values with interpolated data\n| extend (anamolies, score,baseline) = series_decompose_anomalies(tsCount,1.5,-1,\"linefit\")\n|project tsCount,anamolies, type, [\"time\"]\n",
       "id": "22ae9614-3c3d-4a78-b026-faa70e5f3844",
-      "usedVariables": [
-        "_endTime",
-        "_startTime",
-        "_type"
-      ]
+      "usedVariables": ["_endTime", "_startTime", "_type"]
     },
     {
       "dataSource": {
@@ -1513,10 +1403,7 @@
       },
       "text": "jobEventsExpanded\n| where [\"time\"] between (_startTime .._endTime ) \n| summarize jobCount = count() by type = replace_string(type,\"Microsoft.Fabric.JobEvents.Item\",\"\")\n\n",
       "id": "e800efa8-1cc9-4a21-aa2c-ccc450a9afab",
-      "usedVariables": [
-        "_endTime",
-        "_startTime"
-      ]
+      "usedVariables": ["_endTime", "_startTime"]
     },
     {
       "dataSource": {
@@ -1525,9 +1412,7 @@
       },
       "text": "let minTs = now()-60d; //last n days\nlet maxTs = now(); \nmaterialized_view(\"dailyAggJobEvents\")\n| where [\"time\"] between (minTs ..maxTs) and isnotempty( itemName) \n| extend jobDurationMin = datetime_diff('minute',jobEndTimeUtc,jobStartTimeUtc)\n| make-series tsJobDurationMin = avg(jobDurationMin) default= long(null) on [\"time\"] from minTs to maxTs step 1d by itemName\n| extend tsJobDurationMin = series_fill_linear(tsJobDurationMin) // replace null values with interpolated data\n| extend (rsquare, slope) = series_fit_line(tsJobDurationMin)\n| project itemName, slope\n| where slope>_slopeThreshold\n| order by slope desc",
       "id": "857e9e6c-d896-4a75-bbd3-d819729ad89c",
-      "usedVariables": [
-        "_slopeThreshold"
-      ]
+      "usedVariables": ["_slopeThreshold"]
     },
     {
       "dataSource": {
