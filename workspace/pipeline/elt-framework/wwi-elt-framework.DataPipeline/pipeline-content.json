@@ -26,7 +26,7 @@
                 "database": "WideWorldImporters"
               },
               "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+                "connection": "582f52ce-7e41-4f0a-b7ca-03e6af28dcc2"
               }
             }
           },
@@ -49,10 +49,10 @@
               "typeProperties": {
                 "schema": "ELT",
                 "table": "IngestDefinition",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-58688af6-f87d-462b-92c7-80d96255dc53"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "32ea3011-3ff6-462d-bab7-b6553b037cd0"
               }
             }
           },
@@ -293,10 +293,10 @@
               "type": "AzureSqlTable",
               "schema": [],
               "typeProperties": {
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-58688af6-f87d-462b-92c7-80d96255dc53"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "32ea3011-3ff6-462d-bab7-b6553b037cd0"
               }
             }
           },
@@ -321,10 +321,10 @@
               "typeProperties": {
                 "schema": "ELT",
                 "table": "L1TransformDefinition",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-58688af6-f87d-462b-92c7-80d96255dc53"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "32ea3011-3ff6-462d-bab7-b6553b037cd0"
               }
             }
           },
@@ -538,7 +538,7 @@
               "database": "WideWorldImporters"
             },
             "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
+              "connection": "582f52ce-7e41-4f0a-b7ca-03e6af28dcc2"
             }
           }
         }
@@ -617,10 +617,10 @@
                     }
                   }
                 ],
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+                "database": "controlDB-58688af6-f87d-462b-92c7-80d96255dc53"
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+                "connection": "32ea3011-3ff6-462d-bab7-b6553b037cd0"
               }
             }
           ]
@@ -666,10 +666,10 @@
             }
           ],
           "scriptBlockExecutionTimeout": "02:00:00",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+          "database": "controlDB-58688af6-f87d-462b-92c7-80d96255dc53"
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "32ea3011-3ff6-462d-bab7-b6553b037cd0"
         }
       },
       {
@@ -715,10 +715,10 @@
             }
           ],
           "scriptBlockExecutionTimeout": "02:00:00",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+          "database": "controlDB-58688af6-f87d-462b-92c7-80d96255dc53"
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+          "connection": "32ea3011-3ff6-462d-bab7-b6553b037cd0"
         }
       }
     ],
