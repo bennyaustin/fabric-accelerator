@@ -4,6 +4,7 @@
     <Name>dw_gold</Name>
     <DSP>Microsoft.Data.Tools.Schema.Sql.SqlDwUnifiedDatabaseSchemaProvider</DSP>
     <DefaultCollation>Latin1_General_100_BIN2_UTF8</DefaultCollation>
+    <ProjectGuid>{a51521f1-f017-4766-b3c2-4ac2c456dfcc}</ProjectGuid>
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />
