@@ -33,11 +33,11 @@
           "datasetSettings": {
             "type": "AzureSqlTable",
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0"
             },
             "schema": [],
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+              "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
             },
             "annotations": []
           },
@@ -50,7 +50,7 @@
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "Get SQL Tables to Ingest",
+        "name": "Get Tables to Ingest",
         "dependsOn": []
       },
       {
@@ -58,7 +58,7 @@
         "typeProperties": {
           "isSequential": false,
           "items": {
-            "value": "@activity('Get SQL Tables to Ingest').output.value",
+            "value": "@activity('Get Tables to Ingest').output.value",
             "type": "Expression"
           },
           "activities": [
@@ -66,7 +66,7 @@
               "type": "ExecutePipeline",
               "typeProperties": {
                 "pipeline": {
-                  "referenceName": "7ea78b86-8d5e-4e2e-adc8-1138c278f6ab",
+                  "referenceName": "55a0a577-300f-acca-4c21-c4bc38ef7f86",
                   "type": "PipelineReference"
                 },
                 "parameters": {
@@ -193,6 +193,26 @@
                   "BronzeWorkspaceID": {
                     "value": "@pipeline().parameters.BronzeWorkspaceID",
                     "type": "Expression"
+                  },
+                  "Backend": {
+                    "value": "@item().Backend",
+                    "type": "Expression"
+                  },
+                  "KeyvaultName": {
+                    "value": "@item().KeyvaultName",
+                    "type": "Expression"
+                  },
+                  "SecretName": {
+                    "value": "@item().SecretName",
+                    "type": "Expression"
+                  },
+                  "JsonDataKey": {
+                    "value": "@item().JsonDataKey",
+                    "type": "Expression"
+                  },
+                  "PaginationNextUrlKey": {
+                    "value": "@item().PaginationNextUrlKey",
+                    "type": "Expression"
                   }
                 },
                 "waitOnCompletion": true
@@ -205,10 +225,10 @@
             }
           ]
         },
-        "name": "ForEach SQL Table",
+        "name": "ForEach Source Table",
         "dependsOn": [
           {
-            "activity": "Get SQL Tables to Ingest",
+            "activity": "Get Tables to Ingest",
             "dependencyConditions": [
               "Succeeded"
             ]
@@ -219,7 +239,7 @@
         "type": "ExecutePipeline",
         "typeProperties": {
           "pipeline": {
-            "referenceName": "592635be-9979-40a3-8a91-0305b696cea2",
+            "referenceName": "0f5d8b36-956a-bc92-4a39-541536dfee77",
             "type": "PipelineReference"
           },
           "parameters": {
@@ -253,7 +273,7 @@
         "name": "Level 1 Transform SILVER",
         "dependsOn": [
           {
-            "activity": "ForEach SQL Table",
+            "activity": "ForEach Source Table",
             "dependencyConditions": [
               "Completed"
             ]
@@ -264,7 +284,7 @@
         "type": "ExecutePipeline",
         "typeProperties": {
           "pipeline": {
-            "referenceName": "29ca711a-e20f-457c-a619-35b0310193ad",
+            "referenceName": "bb075d88-b97b-9b9c-4a77-b43f9c3b9bde",
             "type": "PipelineReference"
           },
           "parameters": {
@@ -313,7 +333,7 @@
     "parameters": {
       "SourceSystemName": {
         "type": "string",
-        "defaultValue": "WWI"
+        "defaultValue": "Public"
       },
       "StreamName": {
         "type": "string"
@@ -324,31 +344,31 @@
       },
       "BronzeObjectID": {
         "type": "string",
-        "defaultValue": "c6c5024f-de55-45ca-a79a-decbe16235e3"
+        "defaultValue": "9fdcf9e1-101d-47e2-974c-40844f543784"
       },
       "BronzeWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "04cd2e48-2955-4ffc-972b-715d0cfb3cfd"
       },
       "SilverObjectID": {
         "type": "string",
-        "defaultValue": "cc80a0ab-603d-4df9-bdfc-c35a7e8ab095"
+        "defaultValue": "3911ba4f-c46b-48cd-aaf8-b27a2bd49a02"
       },
       "SilverWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "04cd2e48-2955-4ffc-972b-715d0cfb3cfd"
       },
       "GoldObjectID": {
         "type": "string",
-        "defaultValue": "7e2bbf6b-43fb-498c-90e3-56199c8c3b5e"
+        "defaultValue": "e3df5019-9450-4fab-bde7-ca27dccea97a"
       },
       "GoldWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "04cd2e48-2955-4ffc-972b-715d0cfb3cfd"
       },
       "GoldDWEndpoint": {
         "type": "string",
-        "defaultValue": "2ipjetq4tn6elkixc3xundvzbi-u4ai3dmkby5u5daorxfpvr5n5q.datawarehouse.fabric.microsoft.com"
+        "defaultValue": "mbpui6de4r2u7jife56vd4kdui-jaxm2bcvfh6e7fzlofoqz6z47u.datawarehouse.fabric.microsoft.com"
       }
     }
   }

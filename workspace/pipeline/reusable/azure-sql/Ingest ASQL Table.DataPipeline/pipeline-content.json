@@ -2,26 +2,10 @@
   "properties": {
     "activities": [
       {
-        "name": "Insert Ingest Instance - RUNNING",
         "type": "SqlServerStoredProcedure",
-        "dependsOn": [
-          {
-            "activity": "Set RunID",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          }
-        ],
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
-        },
         "typeProperties": {
+          "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0",
           "storedProcedureName": "[ELT].[InsertIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
           "storedProcedureParameters": {
             "ADFPipelineRunID": {
               "value": {
@@ -68,178 +52,46 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-        }
+          "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Insert Ingest Instance - RUNNING",
+        "dependsOn": [
+          {
+            "activity": "Set RunID",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
-        "name": "Set RunID",
         "type": "SetVariable",
-        "dependsOn": [],
-        "policy": {
-          "secureOutput": false,
-          "secureInput": false
-        },
         "typeProperties": {
           "variableName": "RunID",
           "value": {
             "value": "@pipeline().RunId",
             "type": "Expression"
           }
-        }
-      },
-      {
-        "name": "Copy Source to Lakehouse",
-        "type": "Copy",
-        "dependsOn": [
-          {
-            "activity": "Insert Ingest Instance - RUNNING",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          }
-        ],
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
         },
-        "typeProperties": {
-          "source": {
-            "type": "AzureSqlSource",
-            "sqlReaderQuery": {
-              "value": "@pipeline().parameters.SourceSQL",
-              "type": "Expression"
-            },
-            "queryTimeout": "02:00:00",
-            "partitionOption": "None",
-            "datasetSettings": {
-              "annotations": [],
-              "type": "AzureSqlTable",
-              "schema": [],
-              "typeProperties": {
-                "database": "WideWorldImporters"
-              },
-              "externalReferences": {
-                "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
-              }
-            }
-          },
-          "sink": {
-            "type": "ParquetSink",
-            "storeSettings": {
-              "type": "LakehouseWriteSettings"
-            },
-            "formatSettings": {
-              "type": "ParquetWriteSettings",
-              "enableVertiParquet": true
-            },
-            "datasetSettings": {
-              "annotations": [],
-              "linkedService": {
-                "name": "84da5653_bc83_445d_8f44_e1371107aad4",
-                "properties": {
-                  "annotations": [],
-                  "type": "Lakehouse",
-                  "typeProperties": {
-                    "workspaceId": "@pipeline().parameters.BronzeWorkspaceID",
-                    "artifactId": "@pipeline().parameters.BronzeObjectID",
-                    "rootFolder": "Files"
-                  }
-                }
-              },
-              "type": "Parquet",
-              "typeProperties": {
-                "location": {
-                  "type": "LakehouseLocation",
-                  "fileName": {
-                    "value": "@pipeline().parameters.DestinationRawFile",
-                    "type": "Expression"
-                  },
-                  "folderPath": {
-                    "value": "@pipeline().parameters.DestinationRawFolder",
-                    "type": "Expression"
-                  }
-                },
-                "compressionCodec": "snappy"
-              },
-              "schema": []
-            }
-          },
-          "enableStaging": false,
-          "translator": {
-            "type": "TabularTranslator",
-            "typeConversion": true,
-            "typeConversionSettings": {
-              "allowDataTruncation": true,
-              "treatBooleanAsNumber": false
-            }
-          }
-        }
-      },
-      {
-        "name": "Get High Watermark",
-        "type": "Lookup",
-        "dependsOn": [
-          {
-            "activity": "Insert Ingest Instance - RUNNING",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          }
-        ],
         "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
+          "secureInput": false,
+          "secureOutput": false
         },
-        "typeProperties": {
-          "source": {
-            "type": "AzureSqlSource",
-            "sqlReaderQuery": {
-              "value": "@pipeline().parameters.StatSQL",
-              "type": "Expression"
-            },
-            "queryTimeout": "02:00:00",
-            "partitionOption": "None"
-          },
-          "datasetSettings": {
-            "annotations": [],
-            "type": "AzureSqlTable",
-            "schema": [],
-            "typeProperties": {
-              "database": "WideWorldImporters"
-            },
-            "externalReferences": {
-              "connection": "a0a57e51-5032-4e46-b0f0-493c9d2f51c9"
-            }
-          }
-        }
+        "name": "Set RunID",
+        "dependsOn": []
       },
       {
-        "name": "Update Ingest Instance - SUCCESS",
         "type": "SqlServerStoredProcedure",
-        "dependsOn": [
-          {
-            "activity": "Update High Watermark",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          }
-        ],
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
-        },
         "typeProperties": {
+          "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0",
           "storedProcedureName": "[ELT].[UpdateIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
           "storedProcedureParameters": {
             "ADFIngestPipelineRunID": {
               "value": {
@@ -257,14 +109,14 @@
             },
             "DataToTimestamp": {
               "value": {
-                "value": "@activity('Get High Watermark').output.firstRow.DataToTimestamp",
+                "value": "@variables('HighWatermark')",
                 "type": "Expression"
               },
               "type": "DateTime"
             },
             "IngestCount": {
               "value": {
-                "value": "@activity('Copy Source to Lakehouse').output.rowsCopied",
+                "value": "@variables('IngestCount')",
                 "type": "Expression"
               },
               "type": "Int32"
@@ -282,7 +134,7 @@
             },
             "SourceCount": {
               "value": {
-                "value": "@activity('Copy Source to Lakehouse').output.rowsRead",
+                "value": "@variables('SourceCount')",
                 "type": "Expression"
               },
               "type": "Int32"
@@ -290,30 +142,30 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-        }
-      },
-      {
-        "name": "Update Ingest Instance - FAILURE",
-        "type": "SqlServerStoredProcedure",
-        "dependsOn": [
-          {
-            "activity": "Copy Source to Lakehouse",
-            "dependencyConditions": [
-              "Failed"
-            ]
-          }
-        ],
+          "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+        },
         "policy": {
           "timeout": "0.12:00:00",
           "retry": 0,
           "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
+          "secureInput": false,
+          "secureOutput": false
         },
+        "name": "Update Ingest Instance - SUCCESS",
+        "dependsOn": [
+          {
+            "activity": "Update High Watermark",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
         "typeProperties": {
+          "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0",
           "storedProcedureName": "[ELT].[UpdateIngestInstance]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
           "storedProcedureParameters": {
             "ADFIngestPipelineRunID": {
               "value": {
@@ -336,33 +188,27 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-        }
-      },
-      {
-        "name": "Get Level 1 Transform Config",
-        "type": "Lookup",
-        "dependsOn": [
-          {
-            "activity": "Get High Watermark",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          },
-          {
-            "activity": "Copy Source to Lakehouse",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          }
-        ],
+          "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+        },
         "policy": {
           "timeout": "0.12:00:00",
           "retry": 0,
           "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
+          "secureInput": false,
+          "secureOutput": false
         },
+        "name": "Update Ingest Instance - FAILURE",
+        "dependsOn": [
+          {
+            "activity": "Switch",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Lookup",
         "typeProperties": {
           "source": {
             "type": "AzureSqlSource",
@@ -376,55 +222,53 @@
                 }
               }
             },
-            "queryTimeout": "02:00:00",
-            "partitionOption": "None"
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
           },
-          "firstRowOnly": false,
           "datasetSettings": {
-            "annotations": [],
             "type": "AzureSqlTable",
-            "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0"
             },
+            "schema": [],
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-            }
-          }
-        }
-      },
-      {
-        "name": "ForEach Level 1 Config",
-        "type": "ForEach",
+              "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get Level 1 Transform Config",
         "dependsOn": [
           {
-            "activity": "Get Level 1 Transform Config",
+            "activity": "Switch",
             "dependencyConditions": [
               "Succeeded"
             ]
           }
-        ],
+        ]
+      },
+      {
+        "type": "ForEach",
         "typeProperties": {
+          "isSequential": true,
           "items": {
             "value": "@activity('Get Level 1 Transform Config').output.value",
             "type": "Expression"
           },
-          "isSequential": true,
           "activities": [
             {
-              "name": "Instantiate Level 1 Transform",
               "type": "SqlServerStoredProcedure",
-              "dependsOn": [],
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureOutput": false,
-                "secureInput": false
-              },
               "typeProperties": {
+                "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0",
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L1]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -442,7 +286,7 @@
                   },
                   "IngestCount": {
                     "value": {
-                      "value": "@activity('Copy Source to Lakehouse').output.rowsCopied",
+                      "value": "@variables('IngestCount')",
                       "type": "Expression"
                     },
                     "type": "Int32"
@@ -583,30 +427,32 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-              }
+                "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Instantiate Level 1 Transform",
+              "dependsOn": []
             }
           ]
-        }
-      },
-      {
-        "name": "Get Level 2 Transform Config",
-        "type": "Lookup",
+        },
+        "name": "ForEach Level 1 Config",
         "dependsOn": [
           {
-            "activity": "ForEach Level 1 Config",
+            "activity": "Get Level 1 Transform Config",
             "dependencyConditions": [
               "Succeeded"
             ]
           }
-        ],
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
-        },
+        ]
+      },
+      {
+        "type": "Lookup",
         "typeProperties": {
           "source": {
             "type": "AzureSqlSource",
@@ -620,55 +466,53 @@
                 }
               }
             },
-            "queryTimeout": "02:00:00",
-            "partitionOption": "None"
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
           },
-          "firstRowOnly": false,
           "datasetSettings": {
-            "annotations": [],
             "type": "AzureSqlTable",
-            "schema": [],
             "typeProperties": {
-              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+              "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0"
             },
+            "schema": [],
             "externalReferences": {
-              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-            }
-          }
-        }
-      },
-      {
-        "name": "ForEach Level 2 Config",
-        "type": "ForEach",
+              "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get Level 2 Transform Config",
         "dependsOn": [
           {
-            "activity": "Get Level 2 Transform Config",
+            "activity": "ForEach Level 1 Config",
             "dependencyConditions": [
               "Succeeded"
             ]
           }
-        ],
+        ]
+      },
+      {
+        "type": "ForEach",
         "typeProperties": {
+          "isSequential": true,
           "items": {
             "value": "@activity('Get Level 2 Transform Config').output.value",
             "type": "Expression"
           },
-          "isSequential": true,
           "activities": [
             {
-              "name": "Instantiate Level 2 Transform",
               "type": "SqlServerStoredProcedure",
-              "dependsOn": [],
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureOutput": false,
-                "secureInput": false
-              },
               "typeProperties": {
+                "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0",
                 "storedProcedureName": "[ELT].[InsertTransformInstance_L2]",
-                "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
                 "storedProcedureParameters": {
                   "CustomParameters": {
                     "value": {
@@ -883,33 +727,35 @@
                 }
               },
               "externalReferences": {
-                "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-              }
+                "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Instantiate Level 2 Transform",
+              "dependsOn": []
             }
           ]
-        }
-      },
-      {
-        "name": "Update High Watermark",
-        "type": "SqlServerStoredProcedure",
+        },
+        "name": "ForEach Level 2 Config",
         "dependsOn": [
           {
-            "activity": "ForEach Level 2 Config",
+            "activity": "Get Level 2 Transform Config",
             "dependencyConditions": [
               "Succeeded"
             ]
           }
-        ],
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureOutput": false,
-          "secureInput": false
-        },
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
         "typeProperties": {
+          "database": "controldb-fabric-accelerator-ab8ed1e6-6394-453c-a261-2f5b561b2ae0",
           "storedProcedureName": "[ELT].[UpdateIngestDefinition]",
-          "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7",
           "storedProcedureParameters": {
             "IngestID": {
               "value": {
@@ -924,7 +770,7 @@
             },
             "LastDeltaDate": {
               "value": {
-                "value": "@activity('Get High Watermark').output.firstRow.DataToTimestamp",
+                "value": "@variables('HighWatermark')",
                 "type": "Expression"
               },
               "type": "DateTime"
@@ -939,8 +785,434 @@
           }
         },
         "externalReferences": {
-          "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
-        }
+          "connection": "d41e04ef-2fef-435a-8ce2-82e61a8fd104"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Update High Watermark",
+        "dependsOn": [
+          {
+            "activity": "ForEach Level 2 Config",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Switch",
+        "typeProperties": {
+          "on": {
+            "value": "@pipeline().parameters.Backend",
+            "type": "Expression"
+          },
+          "cases": [
+            {
+              "value": "Azure SQL",
+              "activities": [
+                {
+                  "type": "Copy",
+                  "typeProperties": {
+                    "source": {
+                      "type": "AzureSqlSource",
+                      "sqlReaderQuery": {
+                        "value": "@pipeline().parameters.SourceSQL",
+                        "type": "Expression"
+                      },
+                      "partitionOption": "None",
+                      "queryTimeout": "02:00:00",
+                      "datasetSettings": {
+                        "type": "AzureSqlTable",
+                        "typeProperties": {
+                          "database": "wwi"
+                        },
+                        "schema": [],
+                        "externalReferences": {
+                          "connection": "2562da07-5d00-4a17-8895-c7459eec4281"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "sink": {
+                      "type": "ParquetSink",
+                      "formatSettings": {
+                        "type": "ParquetWriteSettings",
+                        "enableVertiParquet": true
+                      },
+                      "storeSettings": {
+                        "type": "LakehouseWriteSettings"
+                      },
+                      "datasetSettings": {
+                        "type": "Parquet",
+                        "typeProperties": {
+                          "location": {
+                            "type": "LakehouseLocation",
+                            "folderPath": {
+                              "value": "@pipeline().parameters.DestinationRawFolder",
+                              "type": "Expression"
+                            },
+                            "fileName": {
+                              "value": "@pipeline().parameters.DestinationRawFile",
+                              "type": "Expression"
+                            }
+                          },
+                          "compressionCodec": "snappy"
+                        },
+                        "schema": [],
+                        "linkedService": {
+                          "name": "a8a97324_121e_4713_97f5_811860086432",
+                          "properties": {
+                            "type": "Lakehouse",
+                            "typeProperties": {
+                              "artifactId": "@pipeline().parameters.BronzeObjectID",
+                              "workspaceId": "@pipeline().parameters.BronzeWorkspaceID",
+                              "rootFolder": "Files"
+                            },
+                            "annotations": []
+                          }
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "translator": {
+                      "type": "TabularTranslator",
+                      "typeConversion": true,
+                      "typeConversionSettings": {
+                        "allowDataTruncation": true,
+                        "treatBooleanAsNumber": false
+                      }
+                    },
+                    "enableStaging": false
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Copy Source to Lakehouse",
+                  "dependsOn": [
+                    {
+                      "activity": "Get High Watermark",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "IngestCount",
+                    "value": {
+                      "value": "@activity('Copy Source to Lakehouse').output.rowsCopied",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set variable - Ingest Count",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy Source to Lakehouse",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "SourceCount",
+                    "value": {
+                      "value": "@activity('Copy Source to Lakehouse').output.rowsRead",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set variable - Source Count",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy Source to Lakehouse",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Lookup",
+                  "typeProperties": {
+                    "source": {
+                      "type": "AzureSqlSource",
+                      "sqlReaderQuery": {
+                        "value": "@pipeline().parameters.StatSQL",
+                        "type": "Expression"
+                      },
+                      "partitionOption": "None",
+                      "queryTimeout": "02:00:00"
+                    },
+                    "datasetSettings": {
+                      "type": "AzureSqlTable",
+                      "typeProperties": {
+                        "database": "wwi"
+                      },
+                      "schema": [],
+                      "externalReferences": {
+                        "connection": "2562da07-5d00-4a17-8895-c7459eec4281"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Get High Watermark",
+                  "dependsOn": []
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "HighWatermark",
+                    "value": {
+                      "value": "@activity('Get High Watermark').output.firstRow.DataToTimestamp",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set High Watermark",
+                  "dependsOn": [
+                    {
+                      "activity": "Get High Watermark",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "Rest API",
+              "activities": [
+                {
+                  "type": "TridentNotebook",
+                  "typeProperties": {
+                    "notebookId": "a58b8ed0-a66a-af8b-4a1f-dc824d1edcf4",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "parameters": {
+                      "api_url": {
+                        "value": {
+                          "value": "@pipeline().parameters.EntityName",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "key_vault_name": {
+                        "value": {
+                          "value": "@pipeline().parameters.KeyvaultName",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "secret_name": {
+                        "value": {
+                          "value": "@pipeline().parameters.SecretName",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "json_data_key": {
+                        "value": {
+                          "value": "@pipeline().parameters.JsonDataKey",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "pagination_next_url_key": {
+                        "value": {
+                          "value": "@pipeline().parameters.PaginationNextUrlKey",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "max_pages": {
+                        "value": {
+                          "value": "50",
+                          "type": "Expression"
+                        },
+                        "type": "int"
+                      },
+                      "stream_Name": {
+                        "value": {
+                          "value": "@pipeline().parameters.StreamName",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "last_watermark": {
+                        "value": {
+                          "value": "@pipeline().parameters.LastDeltaDate",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "api_date_param_name": {
+                        "value": {
+                          "value": "@pipeline().parameters.WatermarkColName",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "json_date_column": {
+                        "value": {
+                          "value": "@pipeline().parameters.WatermarkColName",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "initial_watermark_default": {
+                        "value": {
+                          "value": "2013-01-01",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "destination_raw_file_system": {
+                        "value": {
+                          "value": "@pipeline().parameters.DestinationRawFileSystem",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "destination_raw_file_folder": {
+                        "value": {
+                          "value": "@pipeline().parameters.DestinationRawFolder",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "destination_raw_file": {
+                        "value": {
+                          "value": "@pipeline().parameters.DestinationRawFile",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Copy API Data to Lakehouse",
+                  "dependsOn": []
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "SourceCount",
+                    "value": {
+                      "value": "@string(json(activity('Copy API Data to Lakehouse').output.result.exitValue).rows_read)",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set variable - Source Record Count",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy API Data to Lakehouse",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "HighWatermark",
+                    "value": {
+                      "value": "@if(\n  empty(json(activity('Copy API Data to Lakehouse').output.result.exitValue).new_watermark),\n  '01-01-1900',\n  json(activity('Copy API Data to Lakehouse').output.result.exitValue).new_watermark\n)",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set variable - Latest Watermark",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy API Data to Lakehouse",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "IngestCount",
+                    "value": {
+                      "value": "@string(json(activity('Copy API Data to Lakehouse').output.result.exitValue).rows_copied)",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set Ingest Count Variable",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy API Data to Lakehouse",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "defaultActivities": []
+        },
+        "name": "Switch",
+        "dependsOn": [
+          {
+            "activity": "Insert Ingest Instance - RUNNING",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ],
     "parameters": {
@@ -1053,16 +1325,44 @@
       },
       "BronzeObjectID": {
         "type": "string",
-        "defaultValue": "c6c5024f-de55-45ca-a79a-decbe16235e3"
+        "defaultValue": "9fdcf9e1-101d-47e2-974c-40844f543784"
       },
       "BronzeWorkspaceID": {
         "type": "string",
-        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+        "defaultValue": "04cd2e48-2955-4ffc-972b-715d0cfb3cfd"
+      },
+      "Backend": {
+        "type": "string",
+        "defaultValue": "Azure SQL"
+      },
+      "KeyvaultName": {
+        "type": "string"
+      },
+      "SecretName": {
+        "type": "string"
+      },
+      "JsonDataKey": {
+        "type": "string"
+      },
+      "PaginationNextUrlKey": {
+        "type": "string"
       }
     },
     "variables": {
       "RunID": {
         "type": "String"
+      },
+      "IngestCount": {
+        "type": "String",
+        "defaultValue": "0"
+      },
+      "SourceCount": {
+        "type": "String",
+        "defaultValue": "0"
+      },
+      "HighWatermark": {
+        "type": "String",
+        "defaultValue": "01-01-1900"
       }
     }
   }
