@@ -179,7 +179,7 @@ jobs:
               NEW_FABRIC_WORKSPACE_ID=$(fab get $WORKSPACE_NAME.Workspace -q id | tr -d '\r')
               echo "NEW_FABRIC_WORKSPACE_ID=$NEW_FABRIC_WORKSPACE_ID" >> $GITHUB_ENV
              
-              NEW_CONTROLDB_NAME=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName -f| tr -d '\r')
+              NEW_CONTROLDB_NAME=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName -f | tr -d '\r')
               echo "NEW_CONTROLDB_NAME=$NEW_CONTROLDB_NAME" >> $GITHUB_ENV
              
               NEW_CONTROLDB_CONNECTION_ID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id | tr -d '\r')
