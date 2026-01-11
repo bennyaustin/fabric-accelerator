@@ -158,6 +158,155 @@ def readFile(medallionLayer,container, folder, file, colSeparator=None, headerFl
 
 # MARKDOWN ********************
 
+# # writeFile()
+# Writes a data file to Lakehouse
+
+# CELL ********************
+
+def writeFile(df, medallionLayer, container, folder, file, mode="overwrite", colSeparator=",", headerFlag=True):
+  # ##########################################################################################################################  
+  # Function: writeFile
+  # Writes a spark dataframe to the Lakehouse in the specified format
+  # 
+  # Parameters:
+  # df = The Spark Dataframe to write
+  # medallionLayer = Medallion layer of data platform. Valid values are bronze, silver or gold.
+  # container = Container of Lakehouse. Default value 'Files'
+  # folder = Folder within container where data file will be written.
+  # file = File name including extension. E.g 'Sales_Orders.parquet'
+  # mode = Write mode. Default 'overwrite'. Options: 'append', 'ignore', 'error', 'overwrite'.
+  # colSeparator = Column separator for text files. Default value ","
+  # headerFlag = boolean flag to indicate whether to write the header for text files. Default value True
+  # 
+  # Returns:
+  # None
+  # ##########################################################################################################################    
+    validMedallionLayer = ["bronze", "silver", "gold"]
+    assert medallionLayer in validMedallionLayer, "Invalid medallion layer. Valid values are bronze, silver or gold"
+    assert df is not None, "Dataframe (df) not provided"
+    assert container is not None, "container not provided"   
+    assert folder is not None, "folder not provided"
+    assert file is not None, "file not provided"
+
+    # Construct the full ABFS path
+    abfsPath = getAbfsPath(medallionLayer)
+    relativePath = container + '/' + folder + '/' + file
+    filePath = abfsPath + '/' + relativePath
+
+    # Determine format based on file extension and write
+    if ".csv" in file or ".txt" in file:
+        df.write.mode(mode).csv(path=filePath, sep=colSeparator, header=headerFlag)
+    elif ".parquet" in file:
+        df.write.mode(mode).parquet(filePath)
+    elif ".json" in file:
+        df.write.mode(mode).json(filePath)
+    elif ".orc" in file:
+        df.write.mode(mode).orc(filePath)
+    elif ".delta" in file: 
+        # Added Delta support as it is standard for Medallion Architectures
+        df.write.mode(mode).format("delta").save(filePath)
+    else:
+        # Default fallback (usually Parquet or CSV depending on config, but explicit is safer)
+        print(f"Warning: Unknown file extension for '{file}'. Defaulting to Parquet.")
+        df.write.mode(mode).parquet(filePath)
+
+    print(f"Successfully wrote data to: {filePath}")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# # writeFilePandas()
+# Writes a data file to Lakehouse but using Pandas Dataframe
+
+# CELL ********************
+
+import pandas as pd
+
+def writeFilePandas(df, medallionLayer, container, folder, file, mode="w", colSeparator=",", headerFlag=True, storage_options=None):
+  # ##########################################################################################################################  
+  # Function: writeFilePandas
+  # Writes a Pandas dataframe to the Lakehouse in the specified format
+  # 
+  # Parameters:
+  # df = The Pandas Dataframe to write
+  # medallionLayer = Medallion layer. Valid values: bronze, silver, gold.
+  # container = Container of Lakehouse.
+  # folder = Folder within container.
+  # file = File name including extension. E.g 'Sales_Orders.parquet'
+  # mode = Write mode. Default 'w' (overwrite). Use 'a' for append (Text/CSV only).
+  # colSeparator = Column separator for text files. Default ","
+  # headerFlag = boolean flag for header in text files. Default True
+  # storage_options = Dict for Azure auth (e.g., {'account_key': '...'} or {'sas_token': '...'}).
+  # 
+  # Returns:
+  # None
+  # ##########################################################################################################################    
+    validMedallionLayer = ["bronze", "silver", "gold"]
+    assert medallionLayer in validMedallionLayer, "Invalid medallion layer. Valid values are bronze, silver or gold"
+    assert df is not None, "Dataframe (df) not provided"
+    assert not df.empty, "Dataframe is empty"
+    assert container is not None, "container not provided"   
+    assert folder is not None, "folder not provided"
+    assert file is not None, "file not provided"
+
+    # Construct the full ABFS path
+    # Note: Ensure getAbfsPath is available in your scope
+    abfsPath = getAbfsPath(medallionLayer)
+    relativePath = container + '/' + folder + '/' + file
+    filePath = abfsPath + '/' + relativePath
+
+    # Handle 'overwrite' vs 'append' mode translation from Spark to Pandas
+    # Pandas uses 'w' for write/overwrite and 'a' for append
+    pandas_mode = 'a' if mode == 'append' else 'w'
+    
+    # Header logic for append mode (usually don't want header if appending)
+    write_header = headerFlag
+    if pandas_mode == 'a':
+        write_header = False 
+
+    try:
+        if ".csv" in file or ".txt" in file:
+            df.to_csv(filePath, sep=colSeparator, index=False, header=write_header, mode=pandas_mode, storage_options=storage_options)
+            
+        elif ".parquet" in file:
+            # Pandas/PyArrow generally overwrites Parquet files. 'Append' is not natively supported for single files.
+            df.to_parquet(filePath, index=False, storage_options=storage_options)
+            
+        elif ".json" in file:
+            # orient='records' is standard for data interoperability
+            df.to_json(filePath, orient='records', lines=True, storage_options=storage_options)
+            
+        elif ".orc" in file:
+            # Requires pyarrow to be installed
+            df.to_orc(filePath, index=False, storage_options=storage_options)
+            
+        else:
+            print(f"Warning: Unknown extension '{file}'. Defaulting to Parquet.")
+            df.to_parquet(filePath, index=False, storage_options=storage_options)
+
+        print(f"Successfully wrote Pandas data to: {filePath}")
+
+    except Exception as e:
+        print(f"Error writing file: {e}")
+        # Logic to suggest installing adlfs if the protocol is not understood
+        if "Protocol not known" in str(e) and "abfss" in filePath:
+            print("Tip: Ensure the library 'adlfs' is installed to write to Azure Data Lake paths with Pandas.")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
 # # readMedallionLHTable()
 # Retrieves a Lakehouse Table from the medallion layers, allowing for table filtering and specific column selection
 
