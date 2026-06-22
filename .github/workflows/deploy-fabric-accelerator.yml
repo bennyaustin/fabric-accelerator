@@ -13,7 +13,7 @@ env:
   BRONZE_LH: bronze_fabric_accelerator
   SILVER_LH: silver_fabric_accelerator
   GOLD_DW: gold_fabric_accelerator
-  WIDE_WORLD_IMPORTERS_CONNECTION_ID: a0a57e51-5032-4e46-b0f0-493c9d2f51c9
+  WIDE_WORLD_IMPORTERS_CONNECTION_ID: 6f404829-9068-44ce-9db1-b733ee244fbf
 
 jobs:
   deploy-fabric-accelerator:
@@ -25,16 +25,22 @@ jobs:
      NEW_BRONZE_LH_ID: null
      NEW_SILVER_LH_ID: null
      NEW_GOLD_DW_ID: null
+     NEW_GOLD_DW_ENDPOINT: null
      NEW_INGEST_ASQL_PIPELINE_LOGICAL_ID: null
+     NEW_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID: null
      NEW_MASTER_INGEST_ASQL_PIPELINE_ID: null
+     NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID: null
      NEW_LEVEL1_TRANSFORM_PIPELINE_LOGICAL_ID: null
      NEW_MASTER_LEVEL1_TRANSFORM_PIPELINE_LOGICAL_ID: null
      NEW_LEVEL2_TRANSFORM_PIPELINE_LOGICAL_ID: null
      NEW_MASTER_LEVEL2_TRANSFORM_PIPELINE_LOGICAL_ID: null
      NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID: null
      NEW_L1_TRANSFORM_GENERIC_NOTEBOOK_ID: null
-     
+     NEW_WWI_MIRROR_DB_CONNECTION_ID: null
 
+    # Design-time IDs captured from the source tenant and kept under version control.
+    # During deployment, these OLD_* IDs are replaced with NEW_* runtime IDs for the target tenant/workspace.
+    # Do not change these values unless you intentionally re-baseline from a newly deployed tenant.
      OLD_FABRIC_CAPACITY_ID: e4eb626a-4082-4143-983d-6fc9284b74cd
      OLD_FABRIC_WORKSPACE_ID: 8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec
      OLD_FABRIC_WORKSPACE_ID1: 00000000-0000-0000-0000-000000000000
@@ -43,22 +49,26 @@ jobs:
      OLD_BRONZE_LH_ID: c6c5024f-de55-45ca-a79a-decbe16235e3
      OLD_SILVER_LH_ID: cc80a0ab-603d-4df9-bdfc-c35a7e8ab095
      OLD_GOLD_DW_ID: 7e2bbf6b-43fb-498c-90e3-56199c8c3b5e
+     OLD_GOLD_DW_ENDPOINT: 2ipjetq4tn6elkixc3xundvzbi-u4ai3dmkby5u5daorxfpvr5n5q.datawarehouse.fabric.microsoft.com
      OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID: a0a57e51-5032-4e46-b0f0-493c9d2f51c9
      OLD_TENANT_ID: 4e921ed2-9b1c-457c-a917-16ef468eb90a
      OLD_INGEST_ASQL_PIPELINE_LOGICAL_ID: 7ea78b86-8d5e-4e2e-adc8-1138c278f6ab
+     OLD_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID: 8ce93ec6-1295-b4f7-48b3-f8d92900eb46
      OLD_MASTER_INGEST_ASQL_PIPELINE_ID: 02b37a75-fb44-4efb-9d88-b6171a4d0d7d
+     OLD_MASTER_INGEST_MIRRORDB_PIPELINE_ID: f6fbd55e-12b9-4ac8-9e6e-a37049dcca2d
      OLD_LEVEL1_TRANSFORM_PIPELINE_LOGICAL_ID: b25d5ad7-288a-4426-83f3-170aff284708
      OLD_MASTER_LEVEL1_TRANSFORM_PIPELINE_LOGICAL_ID: 592635be-9979-40a3-8a91-0305b696cea2
      OLD_LEVEL2_TRANSFORM_PIPELINE_LOGICAL_ID: 5a473c1e-fd95-4b0a-a4a0-33537c65a0d7
      OLD_MASTER_LEVEL2_TRANSFORM_PIPELINE_LOGICAL_ID: 29ca711a-e20f-457c-a619-35b0310193ad
      OLD_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID: dcbe357b-2a94-4d28-a21f-8e2300e33f89
      OLD_L1_TRANSFORM_GENERIC_NOTEBOOK_ID: 3e035f81-2c25-416b-9009-b7ba22e444ab
+     OLD_WWI_MIRROR_DB_CONNECTION_ID: 69dfd2df-8257-4218-8002-a4222dc3d1a6
 
     runs-on: ubuntu-latest
     steps:
 
         # Checkout code
-        - uses: actions/checkout@v3   
+        - uses: actions/checkout@v6   
 
         # Python Version Pre-Requisites
         - name: Fabric CLI Python Pre-Requisites
@@ -82,6 +92,9 @@ jobs:
             fab exists .capacities/$FABRIC_CAPACITY_NAME.Capacity | grep -q true || fab create .capacities/$FABRIC_CAPACITY_NAME.Capacity -P location=$FABRIC_CAPACITY_LOCATION,sku=$FABRIC_CAPACITY_SKU,resourceGroup=$RESOURCE_GROUP,subscriptionId=${{ secrets.SUBSCRIPTION_ID }},admin=$FABRIC_CAPACITY_ADMIN_ID
             # fab ls .capacities/$FABRIC_CAPACITY_NAME.Capacity -q state | tr -d '\r' | grep -q "Inactive" || fab start .capacities/$FABRIC_CAPACITY_NAME.Capacity -f
 
+            NEW_FABRIC_CAPACITY_ID=$(fab get $WORKSPACE_NAME.Workspace -q capacityId | tr -d '\r')
+            echo "NEW_FABRIC_CAPACITY_ID=$NEW_FABRIC_CAPACITY_ID" >> $GITHUB_ENV
+
        # Create Workspace if it does not exist
         - name: Create Workspace if it does not exist
           run: |
@@ -92,20 +105,37 @@ jobs:
               fab acl set $WORKSPACE_NAME.Workspace -I $WORKSPACE_ADMIN_ID -R admin -f
             fi 
 
+            NEW_FABRIC_WORKSPACE_ID=$(fab get $WORKSPACE_NAME.Workspace -q id | tr -d '\r')
+            echo "NEW_FABRIC_WORKSPACE_ID=$NEW_FABRIC_WORKSPACE_ID" >> $GITHUB_ENV
+
+        # Enable workspace Identity and grant contributor role
+        - name: Enable workspace identity and grant contributor role
+          run: |
+            fab exists "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity" | grep -q true || fab create "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
+
+            wIObjId=$(fab ls "${WORKSPACE_NAME}.Workspace/.managedidentities" -l | grep "${WORKSPACE_NAME}.ManagedIdentity" | awk '{print $2}' | tr -d '\r\n')
+           
+            fab acl get "${WORKSPACE_NAME}.Workspace" -q "[?principal.servicePrincipalDetails.aadAppId=='${wIObjId}'] | length(@)" | grep -q '^[1-9]' \
+              && echo "Workspace identity already has an ACL in workspace" \
+              || fab acl set "${WORKSPACE_NAME}.Workspace" -I "$wIObjId" -R contributor -f
+
         # Delete Eventstream if it exists (TEMP WORKAROUND for issue with existing Eventstream during redeployments)
         - name: Delete Eventstream if it exists
           run: |
-            set -x
-            fab exists "$WORKSPACE_NAME.Workspace/es_fabricEvents.EventStream" | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/es_fabricEvents.EventStream" -f
             set +x
+            fab exists "$WORKSPACE_NAME.Workspace/es_fabricEvents.EventStream" | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/es_fabricEvents.EventStream" -f
+            set -x
+
        # Create Folders if they do not exist
         - name: Create folders if they do not exist
           run: |  
-              echo "Creating Notebook folders if they do not exist"
+              echo "Creating folders if they do not exist"
               fab exists $WORKSPACE_NAME.Workspace/elt-framework.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/elt-framework.Folder
               fab exists $WORKSPACE_NAME.Workspace/lakehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/lakehouse.Folder
               fab exists $WORKSPACE_NAME.Workspace/warehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/warehouse.Folder
-              
+              fab exists $WORKSPACE_NAME.Workspace/mirror.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/mirror.Folder
+
+              echo "Creating Notebook folders if they do not exist"
               fab exists $WORKSPACE_NAME.Workspace/notebook.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/notebook.Folder
               fab exists $WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder
               fab exists $WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder
@@ -117,9 +147,9 @@ jobs:
               fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder
               fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder
               fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/azure-sql.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/azure-sql.Folder
-              fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/lakehouse.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/lakehouse.Folder
               fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/level1-transform.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/level1-transform.Folder
               fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/level2-transform.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/level2-transform.Folder
+              fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/mirrordb.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/mirrordb.Folder
               fab exists $WORKSPACE_NAME.Workspace/pipeline.Folder/elt-framework.Folder | grep -q true || fab create $WORKSPACE_NAME.Workspace/pipeline.Folder/elt-framework.Folder
            
               echo "Creating RTI folders if they do not exist"
@@ -133,23 +163,115 @@ jobs:
           run: |
               fab exists $WORKSPACE_NAME.Workspace/elt-framework.Folder/$FABRIC_SQL_DB_NAME.SQLDatabase | grep -q true || fab create $WORKSPACE_NAME.Workspace/elt-framework.Folder/$FABRIC_SQL_DB_NAME.SQLDatabase
 
+              NEW_CONTROLDB_NAME=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName -f | tr -d '\r')
+              echo "NEW_CONTROLDB_NAME=$NEW_CONTROLDB_NAME" >> $GITHUB_ENV
+
        # Create Fabric SQL database connection if it does not exist
         - name: Create FSQL DB Connection if it does not exist
           run: |
-              FSQLConnExists=$(fab exists .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection | tr -d '[:space:]')
-              echo "FSQLConnExists: $FSQLConnExists"
-              if [ "$FSQLConnExists" != "*true" ]; then
-                server=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.serverFqdn| tr -d '\r')
-                database=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName| tr -d '\r') 
-                echo "Creating connection for server: $server and database: $database"
-                fab create .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -P connectionDetails.creationMethod=SQL,connectionDetails.type=SQL,connectionDetails.parameters.server=$server,connectionDetails.parameters.database=$database,credentialDetails.type=ServicePrincipal,credentialDetails.servicePrincipalClientId=${{ secrets.ACTION_SPN_CLIENTID }},credentialDetails.servicePrincipalSecret=${{ secrets.ACTION_SPN_SECRET }},credentialDetails.tenantid=${{ secrets.TENANT_ID }} 
-                connectionID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id| tr -d '\r')
-                
-                rolejson=$(jq -n --arg id "$WORKSPACE_ADMIN_ID" --arg type "${WORKSPACE_ADMIN_TYPE^}" '{"principal": {"id": $id, "type": $type}, "role": "Owner"}')         
-                echo "Assigning role to connection: $rolejson"
-                fab api -X post "connections/$connectionID/roleAssignments" -i "$rolejson" --show_headers
+            FSQLConnExists=$(fab exists .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection | tr -d '[:space:]')
+            echo "FSQLConnExists: $FSQLConnExists"
 
-              fi
+            if [ "$FSQLConnExists" != "*true" ]; then
+              server=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.serverFqdn -f | tr -d '\r')
+              database=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName -f | tr -d '\r')
+              fab create .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection \
+                -P connectionDetails.creationMethod=SQL,connectionDetails.type=SQL,connectionDetails.parameters.server=$server,connectionDetails.parameters.database=$database,credentialDetails.type=ServicePrincipal,credentialDetails.servicePrincipalClientId=${{ secrets.ACTION_SPN_CLIENTID }},credentialDetails.servicePrincipalSecret=${{ secrets.ACTION_SPN_SECRET }},credentialDetails.tenantid=${{ secrets.TENANT_ID }} 
+
+              connectionID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id | tr -d '\r')
+               adminRoleJson=$(jq -n \
+              --arg id "$WORKSPACE_ADMIN_ID" \
+              --arg type "${WORKSPACE_ADMIN_TYPE^}" \
+              '{"principal": {"id": $id, "type": $type}, "role": "Owner"}')
+              
+              fab api -X post "connections/$connectionID/roleAssignments" -i "$adminRoleJson" --show_headers || true              
+            fi
+
+            connectionID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id | tr -d '\r')
+            echo "NEW_CONTROLDB_CONNECTION_ID=$connectionID" >> $GITHUB_ENV
+
+       # Deploy WWI-mirror Database
+        - name: Deploy WWI-mirror Database
+          run: |
+            echo "Files to be updated from $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID to $WIDE_WORLD_IMPORTERS_CONNECTION_ID"
+            grep --null -rl "$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+            grep --null -rl $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID/$WIDE_WORLD_IMPORTERS_CONNECTION_ID/g"
+
+
+            MirrorDBExists=$(fab exists $WORKSPACE_NAME.Workspace/WideWorldImporters-mirror.MirroredDatabase | tr -d '[:space:]')
+          
+            if [ "$MirrorDBExists" != "*true" ]; then
+                mirroring=$(jq '.' "${GITHUB_WORKSPACE}/workspace/mirror/WideWorldImporters-mirror.MirroredDatabase/mirroring.json" | base64)
+                folderId=$(fab get $WORKSPACE_NAME.Workspace/mirror.Folder -q id | tr -d '\r')
+                jsonPayload=$(jq -n \
+                          --arg displayName "WideWorldImporters-mirror" \
+                          --arg payload "$mirroring" \
+                          --arg folderId "$folderId" \
+                          '{"displayName": $displayName,"definition": {"parts":[{"path": "mirroring.json","payload": $payload,"payloadType": "InlineBase64"}]},"folderId": $folderId}')
+                response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/mirroredDatabases" -i "$jsonPayload" --show_headers)
+                echo "$response"
+                status_code=$(echo "$response" | jq -r '.status_code')
+                
+                if [ "$status_code" = "201" ]; then
+                  echo "WideWorldImporters-mirror Database deployed successfully."
+                else
+                  echo "Deployment of WideWorldImporters-mirror Database failed with status code: $status_code">&2
+                  exit 1
+                fi
+            fi
+            
+            NEW_WWI_MIRROR_DB_ID=$(fab get $WORKSPACE_NAME.Workspace/WideWorldImporters-mirror.MirroredDatabase -q id | tr -d '\r')
+
+            # Poll mirroring status until no longer Initializing
+            echo "Waiting for WideWorldImporters-mirror to initialize..."
+            while :; do
+              response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/mirroredDatabases/$NEW_WWI_MIRROR_DB_ID/getMirroringStatus" --show_headers)
+              echo "$response"
+              status_code=$(echo "$response" | jq -r '.status_code')
+              status=$(echo "$response" | jq -r '.text.status')
+              echo "Mirroring status: $status"
+              [ "$status_code" = "200" ] && [ "$status" != "Initializing" ] && break
+              sleep 30
+            done
+            echo "Mirroring status is now: $status"
+
+            # Start Mirroring
+            echo "Starting WideWorldImporters-mirror..."
+            response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/mirroredDatabases/$NEW_WWI_MIRROR_DB_ID/startMirroring" --show_headers)
+            echo "$response"
+            status_code=$(echo "$response" | jq -r '.status_code')
+
+            if [ "$status_code" = "200" ]; then
+              echo "WideWorldImporters-mirror Database mirroring started successfully."
+            else
+              echo "Starting mirroring for WideWorldImporters-mirror Database failed with status code: $status_code">&2
+              exit 1
+            fi
+
+        # Create WideWorldImporters-mirror database connection if it does not exist
+        - name: Create WideWorldImporters-mirror Connection if it does not exist
+          run: |
+            MirrorASQLConnExists=$(fab exists .connections/"${WORKSPACE_NAME}-WWI-mirror".Connection | tr -d '[:space:]')
+            echo "MirrorASQLConnExists: $MirrorASQLConnExists"
+
+            if [ "$MirrorASQLConnExists" != "*true" ]; then
+              server=$(fab get $WORKSPACE_NAME.Workspace/WideWorldImporters-mirror.MirroredDatabase -q properties.sqlEndpointProperties.connectionString | tr -d '\r')
+              database="WideWorldImporters-mirror"
+              fab create .connections/"${WORKSPACE_NAME}-WWI-mirror".Connection \
+                -P connectionDetails.creationMethod=SQL,connectionDetails.type=SQL,connectionDetails.parameters.server=$server,connectionDetails.parameters.database=$database,credentialDetails.type=ServicePrincipal,credentialDetails.servicePrincipalClientId=${{ secrets.ACTION_SPN_CLIENTID }},credentialDetails.servicePrincipalSecret=${{ secrets.ACTION_SPN_SECRET }},credentialDetails.tenantid=${{ secrets.TENANT_ID }} 
+
+              connectionID=$(fab get .connections/"${WORKSPACE_NAME}-WWI-mirror".Connection -q id | tr -d '\r')
+              adminRoleJson=$(jq -n \
+              --arg id "$WORKSPACE_ADMIN_ID" \
+              --arg type "${WORKSPACE_ADMIN_TYPE^}" \
+              '{"principal": {"id": $id, "type": $type}, "role": "Owner"}')
+
+              fab api -X post "connections/$connectionID/roleAssignments" -i "$adminRoleJson" --show_headers || true
+            fi
+
+            connectionID=$(fab get .connections/"${WORKSPACE_NAME}-WWI-mirror".Connection -q id | tr -d '\r')
+            echo "NEW_WWI_MIRROR_DB_CONNECTION_ID=$connectionID" >> $GITHUB_ENV
+
           # Create Medallion Layers if they do not exist
         - name: Create Medallion Layers if they do not exist
           run: |
@@ -170,21 +292,7 @@ jobs:
               if [ "$GoldDWExists" != "*true" ]; then
                 fab create $WORKSPACE_NAME.Workspace/warehouse.Folder/$GOLD_DW.Warehouse
               fi
-        #   Replace OLD IDs with NEW IDs in workspace files
-        - name: Replace OLD IDs with NEW IDs in workspace files
-          run: |
-              NEW_FABRIC_CAPACITY_ID=$(fab get $WORKSPACE_NAME.Workspace -q capacityId | tr -d '\r')
-              echo "NEW_FABRIC_CAPACITY_ID=$NEW_FABRIC_CAPACITY_ID" >> $GITHUB_ENV
-             
-              NEW_FABRIC_WORKSPACE_ID=$(fab get $WORKSPACE_NAME.Workspace -q id | tr -d '\r')
-              echo "NEW_FABRIC_WORKSPACE_ID=$NEW_FABRIC_WORKSPACE_ID" >> $GITHUB_ENV
-             
-              NEW_CONTROLDB_NAME=$(fab get $WORKSPACE_NAME.Workspace/$FABRIC_SQL_DB_NAME.SQLDatabase -q properties.databaseName| tr -d '\r')
-              echo "NEW_CONTROLDB_NAME=$NEW_CONTROLDB_NAME" >> $GITHUB_ENV
-             
-              NEW_CONTROLDB_CONNECTION_ID=$(fab get .connections/"${WORKSPACE_NAME}-${FABRIC_SQL_DB_NAME}".Connection -q id | tr -d '\r')
-              echo "NEW_CONTROLDB_CONNECTION_ID=$NEW_CONTROLDB_CONNECTION_ID" >> $GITHUB_ENV
-             
+
               NEW_BRONZE_LH_ID=$(fab get $WORKSPACE_NAME.Workspace/$BRONZE_LH.Lakehouse -q id | tr -d '\r')
               echo "NEW_BRONZE_LH_ID=$NEW_BRONZE_LH_ID" >> $GITHUB_ENV
              
@@ -194,6 +302,13 @@ jobs:
               NEW_GOLD_DW_ID=$(fab get $WORKSPACE_NAME.Workspace/$GOLD_DW.Warehouse -q id | tr -d '\r')
               echo "NEW_GOLD_DW_ID=$NEW_GOLD_DW_ID" >> $GITHUB_ENV
 
+              NEW_GOLD_DW_ENDPOINT=$(fab get $WORKSPACE_NAME.Workspace/$GOLD_DW.Warehouse -q properties.connectionString | tr -d '\r')
+              echo "NEW_GOLD_DW_ENDPOINT=$NEW_GOLD_DW_ENDPOINT" >> $GITHUB_ENV
+
+        #   Replace OLD IDs with NEW IDs in workspace files
+        - name: Replace OLD IDs with NEW IDs in workspace files
+          run: |
+             
               echo "Replacing OLD ID with NEW ID in workspace files"
 
               echo "Files to be updated from $OLD_FABRIC_CAPACITY_ID to $NEW_FABRIC_CAPACITY_ID"
@@ -228,13 +343,22 @@ jobs:
               grep --null -rl "$OLD_GOLD_DW_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
               grep --null -rl $OLD_GOLD_DW_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_GOLD_DW_ID/$NEW_GOLD_DW_ID/g"
 
-              echo "Files to be updated from $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID to $WIDE_WORLD_IMPORTERS_CONNECTION_ID"
-              grep --null -rl "$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
-              grep --null -rl $OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_WIDE_WORLD_IMPORTERS_CONNECTION_ID/$WIDE_WORLD_IMPORTERS_CONNECTION_ID/g"
+              echo "Files to be updated from $OLD_GOLD_DW_ENDPOINT to $NEW_GOLD_DW_ENDPOINT"
+              grep --null -rl "$OLD_GOLD_DW_ENDPOINT" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+              grep --null -rl $OLD_GOLD_DW_ENDPOINT ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_GOLD_DW_ENDPOINT/$NEW_GOLD_DW_ENDPOINT/g"              
+
+              echo "Files to be updated from $OLD_WWI_MIRROR_DB_CONNECTION_ID to $NEW_WWI_MIRROR_DB_CONNECTION_ID"
+              grep --null -rl "$OLD_WWI_MIRROR_DB_CONNECTION_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+              grep --null -rl $OLD_WWI_MIRROR_DB_CONNECTION_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_WWI_MIRROR_DB_CONNECTION_ID/$NEW_WWI_MIRROR_DB_CONNECTION_ID/g"
 
               echo "Files to be updated with new Tenant ID"
               grep --null -rl "$OLD_TENANT_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
               grep --null -rl $OLD_TENANT_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_TENANT_ID/${{ secrets.TENANT_ID }}/g"
+
+              echo "Files to be updated from lh_silver to $SILVER_LH"
+              grep --null -rl "lh_silver" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+              grep --null -rl "lh_silver" ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/lh_silver/$SILVER_LH/g"
+
 
               echo "Replacing OLD ID with NEW ID in ipynb files"
 
@@ -258,10 +382,48 @@ jobs:
               grep --null -rl "dw_gold" "${GITHUB_WORKSPACE}/ipynb" | tr '\0' '\n'
               grep --null -rl "dw_gold" ${GITHUB_WORKSPACE}/ipynb | xargs -0 sed -i "s/dw_gold/$GOLD_DW/g"
 
-        # Deploy Notebooks
+        # # Deploy Notebooks
+        # - name: Deploy Notebooks
+        #   run: |
+            
+        #     fab exists $WORKSPACE_NAME.Workspace/CommonTransforms.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/CommonTransforms.Notebook" -f &
+        #     fab exists $WORKSPACE_NAME.Workspace/DeltaLakeFunctions.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/DeltaLakeFunctions.Notebook" -f &
+        #     fab exists $WORKSPACE_NAME.Workspace/entra-functions.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/entra-functions.Notebook" -f &
+        #     fab exists $WORKSPACE_NAME.Workspace/L1Transform-Generic-Fabric.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/L1Transform-Generic-Fabric.Notebook" -f &
+        #     fab exists "$WORKSPACE_NAME.Workspace/Optimize Delta Lake Tables.Notebook" | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/Optimize Delta Lake Tables.Notebook" -f &
+        #     fab exists $WORKSPACE_NAME.Workspace/EnvSettings.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/EnvSettings.Notebook" -f &
+        #     fab exists "$WORKSPACE_NAME.Workspace/Unit Test CommonTransforms.Notebook" | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/Unit Test CommonTransforms.Notebook" -f &
+        #     fab exists $WORKSPACE_NAME.Workspace/UnitTest_DeltaLakeFunctions.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/UnitTest_DeltaLakeFunctions.Notebook" -f &
+        #     wait
+
+            
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder/CommonTransforms.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/CommonTransforms.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/delta-lake.Folder/DeltaLakeFunctions.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/DeltaLakeFunctions.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/entra.Folder/entra-functions.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/entra-functions.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/level1-transform.Folder/L1Transform-Generic-Fabric.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/L1Transform-Generic-Fabric.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/level1-transform.Folder/Optimize Delta Lake Tables.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/Optimize Delta Lake Tables.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/EnvSettings.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/EnvSettings.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder/Unit Test CommonTransforms.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/Unit Test CommonTransforms.Notebook" --format .ipynb -f
+        #     fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/delta-lake.Folder/UnitTest_DeltaLakeFunctions.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/UnitTest_DeltaLakeFunctions.Notebook" --format .ipynb -f 
+            
+
+        #     NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID=$(fab get "$WORKSPACE_NAME.Workspace/Optimize Delta Lake Tables.Notebook" -q id | tr -d '\r')
+        #     echo "NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID=$NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID" >> $GITHUB_ENV
+        #     echo "Files to be updated from $OLD_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID to $NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID"
+        #     grep --null -rl "$OLD_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+        #     grep --null -rl $OLD_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID/$NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID/g"
+
+        #     NEW_L1_TRANSFORM_GENERIC_NOTEBOOK_ID=$(fab get "$WORKSPACE_NAME.Workspace/L1Transform-Generic-Fabric.Notebook" -q id | tr -d '\r')
+        #     echo "NEW_L1_TRANSFORM_GENERIC_NOTEBOOK_ID=$NEW_L1_TRANSFORM_GENERIC_NOTEBOOK_ID" >> $GITHUB_ENV
+        #     echo "Files to be updated from $OLD_L1_TRANSFORM_GENERIC_NOTEBOOK_ID to $NEW_L1_TRANSFORM_GENERIC_NOTEBOOK_ID"
+        #     grep --null -rl "$OLD_L1_TRANSFORM_GENERIC_NOTEBOOK_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+        #     grep --null -rl $OLD_L1_TRANSFORM_GENERIC_NOTEBOOK_ID ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_L1_TRANSFORM_GENERIC_NOTEBOOK_ID/$NEW_L1_TRANSFORM_GENERIC_NOTEBOOK_ID/g"
+
+
         - name: Deploy Notebooks
           run: |
-            
+            set -euo pipefail
+
             fab exists $WORKSPACE_NAME.Workspace/CommonTransforms.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/CommonTransforms.Notebook" -f &
             fab exists $WORKSPACE_NAME.Workspace/DeltaLakeFunctions.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/DeltaLakeFunctions.Notebook" -f &
             fab exists $WORKSPACE_NAME.Workspace/entra-functions.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/entra-functions.Notebook" -f &
@@ -272,16 +434,38 @@ jobs:
             fab exists $WORKSPACE_NAME.Workspace/UnitTest_DeltaLakeFunctions.Notebook | grep -q true && fab rm "$WORKSPACE_NAME.Workspace/UnitTest_DeltaLakeFunctions.Notebook" -f &
             wait
 
-            
-            fab exists $WORKSPACE_NAME.Workspace/CommonTransforms.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder/CommonTransforms.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/CommonTransforms.Notebook" --format .ipynb -f &
-            fab exists $WORKSPACE_NAME.Workspace/DeltaLakeFunctions.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/delta-lake.Folder/DeltaLakeFunctions.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/DeltaLakeFunctions.Notebook" --format .ipynb -f &
-            fab exists $WORKSPACE_NAME.Workspace/entra-functions.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/entra.Folder/entra-functions.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/entra-functions.Notebook" --format .ipynb -f &
-            fab exists $WORKSPACE_NAME.Workspace/L1Transform-Generic-Fabric.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/level1-transform.Folder/L1Transform-Generic-Fabric.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/L1Transform-Generic-Fabric.Notebook" --format .ipynb -f &
-            fab exists $WORKSPACE_NAME.Workspace/Optimize Delta Lake Tables.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/level1-transform.Folder/Optimize Delta Lake Tables.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/Optimize Delta Lake Tables.Notebook" --format .ipynb -f &
-            fab exists $WORKSPACE_NAME.Workspace/EnvSettings.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/EnvSettings.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/EnvSettings.Notebook" --format .ipynb -f &
-            fab exists "$WORKSPACE_NAME.Workspace/Unit Test CommonTransforms.Notebook" | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder/Unit Test CommonTransforms.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/Unit Test CommonTransforms.Notebook" --format .ipynb -f &
-            fab exists $WORKSPACE_NAME.Workspace/UnitTest_DeltaLakeFunctions.Notebook | grep -q true || fab import "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/delta-lake.Folder/UnitTest_DeltaLakeFunctions.Notebook" -i "${GITHUB_WORKSPACE}/ipynb/UnitTest_DeltaLakeFunctions.Notebook" --format .ipynb -f &
-            wait
+            sleep 30
+
+            import_with_retry() {
+              local target="$1"
+              local input="$2"
+              local attempts=10
+              local delay=30
+              local i=1
+
+              while [ $i -le $attempts ]; do
+                echo "Import attempt $i/$attempts for $target"
+                if fab import "$target" -i "$input" --format .ipynb -f; then
+                  return 0
+                fi
+                if [ $i -lt $attempts ]; then
+                  sleep $delay
+                fi
+                i=$((i+1))
+              done
+
+              echo "Failed to import $target after $attempts attempts" >&2
+              exit 1
+            }
+
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder/CommonTransforms.Notebook" "${GITHUB_WORKSPACE}/ipynb/CommonTransforms.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/delta-lake.Folder/DeltaLakeFunctions.Notebook" "${GITHUB_WORKSPACE}/ipynb/DeltaLakeFunctions.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/entra.Folder/entra-functions.Notebook" "${GITHUB_WORKSPACE}/ipynb/entra-functions.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/level1-transform.Folder/L1Transform-Generic-Fabric.Notebook" "${GITHUB_WORKSPACE}/ipynb/L1Transform-Generic-Fabric.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/level1-transform.Folder/Optimize Delta Lake Tables.Notebook" "${GITHUB_WORKSPACE}/ipynb/Optimize Delta Lake Tables.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/EnvSettings.Notebook" "${GITHUB_WORKSPACE}/ipynb/EnvSettings.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/common-pyspark.Folder/Unit Test CommonTransforms.Notebook" "${GITHUB_WORKSPACE}/ipynb/Unit Test CommonTransforms.Notebook"
+            import_with_retry "$WORKSPACE_NAME.Workspace/notebook.Folder/reusable.Folder/delta-lake.Folder/UnitTest_DeltaLakeFunctions.Notebook" "${GITHUB_WORKSPACE}/ipynb/UnitTest_DeltaLakeFunctions.Notebook"
 
             NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID=$(fab get "$WORKSPACE_NAME.Workspace/Optimize Delta Lake Tables.Notebook" -q id | tr -d '\r')
             echo "NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID=$NEW_OPTIMIZE_DELTA_TABLES_NOTEBOOK_ID" >> $GITHUB_ENV
@@ -689,6 +873,119 @@ jobs:
                 exit 1
             fi
 
+     # Deploy Pipeline Ingest ASQL Table
+        - name: Deploy Pipeline Ingest MirrorDB Table
+          run: |
+            PipelineExists=$(fab exists "$WORKSPACE_NAME.Workspace/Ingest MirrorDB Table.DataPipeline"| tr -d '[:space:]')
+            pipeline_content=$(jq '.' "${GITHUB_WORKSPACE}/workspace/pipeline/reusable/mirrordb/Ingest MirrorDB Table.DataPipeline/pipeline-content.json"| base64)
+            platform=$(jq '.' "${GITHUB_WORKSPACE}/workspace/pipeline/reusable/mirrordb/Ingest MirrorDB Table.DataPipeline/.platform"| base64)
+
+            if [ "$PipelineExists" != "*true" ]; then
+                folderId=$(fab get $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/mirrordb.Folder -q id | tr -d '\r')
+                jsonPayload=$(jq -n \
+                    --arg displayName "Ingest MirrorDB Table" \
+                    --arg pipeline_content "$pipeline_content" \
+                    --arg platform "$platform" \
+                    --arg folderId "$folderId" \
+                    '{"displayName": $displayName,"definition": {"parts":[{"path": "pipeline-content.json","payload": $pipeline_content,"payloadType": "InlineBase64"},{"path": ".platform","payload": $platform,"payloadType": "InlineBase64"}]},"folderId": $folderId}')
+                response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/dataPipelines" -i "$jsonPayload" --show_headers)
+            else
+                pipelineId=$(fab get $WORKSPACE_NAME.Workspace/Ingest MirrorDB Table.DataPipeline -q id | tr -d '\r')
+                jsonPayload=$(jq -n \
+                    --arg pipeline_content "$pipeline_content" \
+                    --arg platform "$platform" \
+                    '{"definition": {"parts":[{"path": "pipeline-content.json","payload": $pipeline_content,"payloadType": "InlineBase64"},{"path": ".platform","payload": $platform,"payloadType": "InlineBase64"}]}}')  
+                response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/dataPipelines/$pipelineId/updateDefinition?updateMetadata=True" -i "$jsonPayload" --show_headers)
+            fi
+
+            echo "$response"
+            status_code=$(echo "$response" | jq -r '.status_code')
+            if [ "$status_code" = "201" ] || [ "$status_code" = "200" ] || [ "$status_code" = "202" ]; then
+
+              if [ "$status_code" = "202" ]; then
+                  operation_id=$(echo "$response" | jq -r '.headers["x-ms-operation-id"]')
+                  retry_after=$(echo "$response" | jq -r '.headers["Retry-After"]')
+                  sleep "$retry_after"
+                  while :; do
+                      response=$(fab api -X get "/operations/$operation_id" --show_headers)
+                      echo "$response"
+                      status=$(echo "$response" | jq -r '.text.status')
+                      [[ "$status" == "Succeeded" || "$status" == "Failed" ]] && break
+                      sleep "$retry_after"
+                  done
+                  if [ "$status" = "Failed" ]; then
+                      echo "Async operation failed during deployment." >&2
+                      exit 1
+                  fi
+              fi
+
+             NEW_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID=$(fab get "$WORKSPACE_NAME.Workspace/Ingest MirrorDB Table.DataPipeline" -q id | tr -d '\r')
+              echo "NEW_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID=$NEW_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID" >> $GITHUB_ENV
+              echo "Files to be updated from $OLD_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID to $NEW_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID"
+              grep --null -rl "$OLD_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+              grep --null -rl "$OLD_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID" ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID/$NEW_INGEST_MIRRORDB_PIPELINE_LOGICAL_ID/g"
+            else
+                echo "Deployment step failed with status code: $status_code">&2
+                exit 1
+            fi
+
+      # Deploy Pipeline Master ELT MirrorDB
+        - name: Deploy Pipeline Master ELT MirrorDB
+          run: |
+            PipelineExists=$(fab exists "$WORKSPACE_NAME.Workspace/Master ELT MirrorDB.DataPipeline"| tr -d '[:space:]')
+            pipeline_content=$(jq '.' "${GITHUB_WORKSPACE}/workspace/pipeline/reusable/mirrordb/Master ELT MirrorDB.DataPipeline/pipeline-content.json"| base64)
+            platform=$(jq '.' "${GITHUB_WORKSPACE}/workspace/pipeline/reusable/mirrordb/Master ELT MirrorDB.DataPipeline/.platform"| base64)
+
+            if [ "$PipelineExists" != "*true" ]; then
+                folderId=$(fab get $WORKSPACE_NAME.Workspace/pipeline.Folder/reusable.Folder/mirrordb.Folder -q id | tr -d '\r')
+                jsonPayload=$(jq -n \
+                    --arg displayName "Master ELT MirrorDB" \
+                    --arg pipeline_content "$pipeline_content" \
+                    --arg platform "$platform" \
+                    --arg folderId "$folderId" \
+                    '{"displayName": $displayName,"definition": {"parts":[{"path": "pipeline-content.json","payload": $pipeline_content,"payloadType": "InlineBase64"},{"path": ".platform","payload": $platform,"payloadType": "InlineBase64"}]},"folderId": $folderId}')
+                response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/dataPipelines" -i "$jsonPayload" --show_headers)
+            else
+                pipelineId=$(fab get $WORKSPACE_NAME.Workspace/Master ELT MirrorDB.DataPipeline -q id | tr -d '\r')
+                jsonPayload=$(jq -n \
+                    --arg pipeline_content "$pipeline_content" \
+                    --arg platform "$platform" \
+                    '{"definition": {"parts":[{"path": "pipeline-content.json","payload": $pipeline_content,"payloadType": "InlineBase64"},{"path": ".platform","payload": $platform,"payloadType": "InlineBase64"}]}}')
+                response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/dataPipelines/$pipelineId/updateDefinition?updateMetadata=True" -i "$jsonPayload" --show_headers)
+            fi
+            
+            echo "$response"
+            #Replace OLD_MASTER_INGEST_MIRRORDB_PIPELINE_ID, not LOGICAL_ID with NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID in workspace files
+            status_code=$(echo "$response" | jq -r '.status_code')
+            if [ "$status_code" = "201" ] || [ "$status_code" = "200" ] || [ "$status_code" = "202" ]; then
+
+              if [ "$status_code" = "202" ]; then
+                  operation_id=$(echo "$response" | jq -r '.headers["x-ms-operation-id"]')
+                  retry_after=$(echo "$response" | jq -r '.headers["Retry-After"]')
+                  sleep "$retry_after"
+                  while :; do
+                      response=$(fab api -X get "/operations/$operation_id" --show_headers)
+                      echo "$response" | jq '.'
+                      status=$(echo "$response" | jq -r '.text.status')
+                      [[ "$status" == "Succeeded" || "$status" == "Failed" ]] && break
+                      sleep "$retry_after"
+                  done
+                  if [ "$status" == "Failed" ]; then
+                      echo "Async operation failed during deployment." >&2
+                      exit 1
+                  fi
+              fi
+
+              NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID=$(fab get "$WORKSPACE_NAME.Workspace/Master ELT MirrorDB.DataPipeline" -q id | tr -d '\r')
+              echo "NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID=$NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID" >> $GITHUB_ENV
+              echo "Files to be updated from $OLD_MASTER_INGEST_MIRRORDB_PIPELINE_ID to $NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID"
+              grep --null -rl "$OLD_MASTER_INGEST_MIRRORDB_PIPELINE_ID" "${GITHUB_WORKSPACE}/workspace" | tr '\0' '\n'
+              grep --null -rl "$OLD_MASTER_INGEST_MIRRORDB_PIPELINE_ID" ${GITHUB_WORKSPACE}/workspace | xargs -0 sed -i "s/$OLD_MASTER_INGEST_MIRRORDB_PIPELINE_ID/$NEW_MASTER_INGEST_MIRRORDB_PIPELINE_ID/g"
+            else
+                echo "Deployment step failed with status code: $status_code">&2
+                exit 1
+            fi
+
       # Create Eventhouse eh_fabricAccelerator
         - name: Create Eventhouse eh_fabricAccelerator
           run: |
@@ -872,6 +1169,99 @@ jobs:
               response=$(fab api -X post "workspaces/$NEW_FABRIC_WORKSPACE_ID/eventStreams/$EventStreamId/updateDefinition?updateMetadata=True" -i "$jsonPayload" --show_headers)
             fi
             echo "$response"
+
       # Logout
-        - name: Logout of Fabric
+        - name: Fabric Logout
           run: fab auth logout
+
+  update-gold-dw:
+    runs-on: windows-latest
+    needs: deploy-fabric-accelerator
+    env:
+      DW_SERVER: null
+      DW_NAME: null
+      GOLD_DW_CONNECTION_STRING: null
+    steps: 
+      # Checkout code
+        - uses: actions/checkout@v6     
+        
+        - name: Azure Login
+          uses: Azure/login@v1
+          with:
+              creds: '{"clientId":"${{ secrets.ACTION_SPN_CLIENTID }}","clientSecret":"${{ secrets.ACTION_SPN_SECRET }}","subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}","tenantId":"${{ secrets.TENANT_ID }}"}'
+
+        # Ensure MSBuild is available on PATH
+        - name: Add msbuild to PATH
+          uses: microsoft/setup-msbuild@v3  
+
+        - name: Replace lh_silver with SILVER_LH in Gold DW sources
+          shell: pwsh
+          run: |
+            $warehousePath = Join-Path "${{ github.workspace }}" "workspace\warehouse\dw_gold.Warehouse"
+            $files = Get-ChildItem -Path $warehousePath -Recurse -File |
+              Select-String -Pattern 'lh_silver' -List |
+              Select-Object -ExpandProperty Path
+
+            foreach ($file in $files) {
+              Write-Host "Updating $file"
+              $content = Get-Content $file -Raw
+              $updated = $content -replace 'lh_silver', '${{ env.SILVER_LH }}'
+              Set-Content -Path $file -Value $updated
+            }
+
+        # Build the SQL project into a .dacpac using MSBuild (SSDT)
+        - name: Build Gold DW dacpac
+          shell: pwsh
+          run: |
+            msbuild "${{ github.workspace }}\workspace\warehouse\dw_gold.Warehouse\dw_gold.sqlproj" `
+              /p:Configuration=Release `
+              /p:Platform="Any CPU" `
+              /p:WarningLevel=0
+
+        # Python Version Pre-Requisites
+        - name: Fabric CLI Python Pre-Requisites
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.12
+       
+       # Install Fabric CLI 
+        - name: Install Fabric CLI
+          run: python -m pip install ms-fabric-cli
+
+        # Get Gold DW connection string
+        - name: Get Gold DW connection string
+          id: get_golddw_connection_string
+          shell: pwsh
+          run: |
+            fab config set encryption_fallback_enabled true
+            fab auth login -u "${{ secrets.ACTION_SPN_CLIENTID }}" -p "${{ secrets.ACTION_SPN_SECRET }}" --tenant "${{ secrets.TENANT_ID }}"
+
+            $resourcePath = "${{ env.WORKSPACE_NAME }}.Workspace/${{ env.GOLD_DW }}.Warehouse"
+            $DW_SERVER = (fab get "$resourcePath" -q properties.connectionString).Trim()
+            $DW_NAME = "${{ env.GOLD_DW }}"
+            $ENTRA_CLIENT_ID = "${{ secrets.ACTION_SPN_CLIENTID }}"
+            $ENTRA_CLIENT_SECRET = "${{ secrets.ACTION_SPN_SECRET }}"
+
+            $GOLD_DW_CONNECTION_STRING = "Server=$DW_SERVER;Initial Catalog=$DW_NAME;Authentication=Active Directory Service Principal;User ID=$ENTRA_CLIENT_ID;Password=$ENTRA_CLIENT_SECRET;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+
+            "DW_SERVER=$DW_SERVER" >> $env:GITHUB_ENV
+            "DW_NAME=$DW_NAME" >> $env:GITHUB_ENV
+            "GOLD_DW_CONNECTION_STRING=$GOLD_DW_CONNECTION_STRING" >> $env:GITHUB_ENV
+            "gold_dw_connection_string=$GOLD_DW_CONNECTION_STRING" >> $env:GITHUB_OUTPUT
+
+       # Deploy using the dacpac from previous step
+        - name: Deploy Gold DW
+          uses: Azure/sql-action@v2.3
+          with:
+            connection-string: ${{ steps.get_golddw_connection_string.outputs.gold_dw_connection_string }}
+            path: ${{ github.workspace }}\workspace\warehouse\dw_gold.Warehouse\bin\Release\dw_gold.dacpac
+            action: Publish
+            skip-firewall-check: true
+
+      # Logout
+        - name: Fabric Logout
+          run: fab auth logout
+
+        - name: Azure Logout
+          run: |
+            az logout            

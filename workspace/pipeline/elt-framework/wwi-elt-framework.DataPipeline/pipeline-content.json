@@ -709,17 +709,11 @@
                   "type": "String",
                   "value": "WWI",
                   "direction": "Input"
-                },
-                {
-                  "name": "StreamName",
-                  "type": "String",
-                  "value": null,
-                  "direction": "Input"
                 }
               ],
               "type": "NonQuery",
               "text": {
-                "value": "update elt.IngestDefinition\n\nset L2TransformationReqdFlag=1\n\nwhere SourceSystemName = @SourceSystem\n\nand StreamName in ('CustomerTransactions','Orders','PurchaseOrders')\n\n\n\n\nInsert into [ELT].[L2TransformDefinition]\n\t([IngestID]\n\t,[L1TransformID]\n\t,[ComputeName]\n\t,[InputType]\n\t,[InputFileSystem]\n\t,[InputFileFolder]\n\t,[OutputL2CurateFileSystem]\n\t,[OutputL2CuratedFolder]\n\t,[OutputL2CuratedFile]\n\t,[InputDWTable]\n\t,[WatermarkColName]\n\t,[OutputDWTable]\n\t,[OutputDWTableWriteMode]\n\t,[ActiveFlag])\nSelect i.IngestID\n\t,l1.L1TransformID\n\t,'[gold].['+ 'create_'+  lower(i.StreamName) + '_monthly_snapshot]' as [ComputeName]\n\t,'Curated' as [InputType]\n\t, 'Tables' as [InputFileSystem]\n\t, l1.OutputDWTable as [InputFileFolder]\n\t, 'Tables' as [OutputL2CurateFileSystem]\n\t, 'gold' as [OutputL2CuratedFolder]\n\t, lower(i.StreamName + '_monthly_snapshot') as [OutputL2CuratedFile]\n\t,l1.OutputDWTable  as [InputDWTable]\n\t,i.WatermarkColName\n\t,lower('[gold].['+ i.StreamName + '_monthly_snapshot]') as [OutputDWTable]\n\t,'append' as [OutputDWTableWriteMode]\n\t, cast(1 as bit) as [ActiveFlag]\nfrom elt.IngestDefinition as i\n\tinner join elt.L1TransformDefinition as l1\n\t\ton i.IngestID =l1.IngestID\nwhere l1.IngestID in (select IngestID from elt.IngestDefinition\n\t\t\t\t\twhere SourceSystemName = @SourceSystem\n\t\t\t\t\tand StreamName like COALESCE(@StreamName,'%')\n\t\t\t\t\tand L2TransformationReqdFlag=1)\n",
+                "value": "update elt.IngestDefinition\nset L2TransformationReqdFlag=1\nwhere SourceSystemName = @SourceSystem\nand StreamName in ('CustomerTransactions','Orders','PurchaseOrders')\n\nInsert into [ELT].[L2TransformDefinition]\n\t([IngestID]\n\t,[L1TransformID]\n\t,[ComputeName]\n\t,[InputType]\n\t,[InputFileSystem]\n\t,[InputFileFolder]\n\t,[OutputL2CurateFileSystem]\n\t,[OutputL2CuratedFolder]\n\t,[OutputL2CuratedFile]\n\t,[InputDWTable]\n\t,[WatermarkColName]\n\t,[OutputDWTable]\n\t,[OutputDWTableWriteMode]\n\t,[ActiveFlag])\nSelect i.IngestID\n\t,l1.L1TransformID\n\t,'[gold].['+ 'create_'+  lower(i.StreamName) + '_monthly_snapshot]' as [ComputeName]\n\t,'Curated' as [InputType]\n\t, 'Tables' as [InputFileSystem]\n\t, l1.OutputDWTable as [InputFileFolder]\n\t, 'Tables' as [OutputL2CurateFileSystem]\n\t, 'gold' as [OutputL2CuratedFolder]\n\t, lower(i.StreamName + '_monthly_snapshot') as [OutputL2CuratedFile]\n\t,l1.OutputDWTable  as [InputDWTable]\n\t,i.WatermarkColName\n\t,lower('[gold].['+ i.StreamName + '_monthly_snapshot]') as [OutputDWTable]\n\t,'append' as [OutputDWTableWriteMode]\n\t, cast(1 as bit) as [ActiveFlag]\nfrom elt.IngestDefinition as i\n\tinner join elt.L1TransformDefinition as l1\n\t\ton i.IngestID =l1.IngestID\nwhere l1.IngestID in (select IngestID from elt.IngestDefinition\n\t\t\t\t\twhere SourceSystemName = @SourceSystem\n\t\t\t\t\tand StreamName in ('CustomerTransactions','Orders','PurchaseOrders')\n\t\t\t\t\tand L2TransformationReqdFlag=1)",
                 "type": "Expression"
               }
             }

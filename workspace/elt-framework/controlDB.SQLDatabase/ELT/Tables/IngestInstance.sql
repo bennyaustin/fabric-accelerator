@@ -4,9 +4,9 @@ CREATE TABLE [ELT].[IngestInstance] (
     [SourceFileDropFileSystem] VARCHAR (50)     NULL,
     [SourceFileDropFolder]     VARCHAR (200)    NULL,
     [SourceFileDropFile]       VARCHAR (200)    NULL,
-    [DestinationRawFileSystem] VARCHAR (50)     NOT NULL,
-    [DestinationRawFolder]     VARCHAR (200)    NOT NULL,
-    [DestinationRawFile]       VARCHAR (200)    NOT NULL,
+    [DestinationRawFileSystem] VARCHAR (50)     NULL,
+    [DestinationRawFolder]     VARCHAR (200)    NULL,
+    [DestinationRawFile]       VARCHAR (200)    NULL,
     [DataFromTimestamp]        DATETIME2 (7)    NULL,
     [DataToTimestamp]          DATETIME2 (7)    NULL,
     [DataFromNumber]           INT              NULL,
@@ -23,6 +23,7 @@ CREATE TABLE [ELT].[IngestInstance] (
     [ModifiedBy]               NVARCHAR (128)   NULL,
     [ModifiedTimestamp]        DATETIME         NULL,
     [ADFIngestPipelineRunID]   UNIQUEIDENTIFIER NULL,
+    [DestinationRawTable]      VARCHAR (200)    NULL,
     CONSTRAINT [PK_IngestInstance] PRIMARY KEY CLUSTERED ([IngestInstanceID] ASC),
     CONSTRAINT [CC_IngestInstance_IngestStatus] CHECK ([IngestStatus]='ReRunFailure' OR [IngestStatus]='ReRunSuccess' OR [IngestStatus]='Running' OR [IngestStatus]='Failure' OR [IngestStatus]='Success'),
     CONSTRAINT [FK_IngestInstance_IngestID] FOREIGN KEY ([IngestID]) REFERENCES [ELT].[IngestDefinition] ([IngestID])
@@ -31,8 +32,8 @@ CREATE TABLE [ELT].[IngestInstance] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [UI_IngestInstance]
-    ON [ELT].[IngestInstance]([DestinationRawFileSystem] ASC, [DestinationRawFolder] ASC, [DestinationRawFile] ASC);
+CREATE UNIQUE NONCLUSTERED INDEX [UI_IngestInstance]
+    ON [ELT].[IngestInstance]([DestinationRawFileSystem] ASC, [DestinationRawFolder] ASC, [DestinationRawFile] ASC, [DestinationRawTable] ASC);
 
 
 GO

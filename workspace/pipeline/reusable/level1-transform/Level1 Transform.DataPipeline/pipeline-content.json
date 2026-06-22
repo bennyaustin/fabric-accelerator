@@ -241,6 +241,27 @@
                 "type": "Expression"
               },
               "type": "string"
+            },
+            "InputRawTable": {
+              "value": {
+                "value": "@pipeline().parameters.InputRawTable",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "DataFromTimestamp": {
+              "value": {
+                "value": "@pipeline().parameters.DataFromTimestamp",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "DataToTimestamp": {
+              "value": {
+                "value": "@pipeline().parameters.DataToTimestamp",
+                "type": "Expression"
+              },
+              "type": "string"
             }
           },
           "sessionTag": {
@@ -888,6 +909,15 @@
       "SilverWorkspaceID": {
         "type": "string",
         "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+      },
+      "InputRawTable": {
+        "type": "string"
+      },
+      "DataFromTimestamp": {
+        "type": "string"
+      },
+      "DataToTimestamp": {
+        "type": "string"
       }
     },
     "variables": {

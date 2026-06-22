@@ -1,6 +1,23 @@
 {
   "sources": [
     {
+      "id": "090ffc27-01c4-48fa-9852-1164a4f0da88",
+      "name": "L1Transform-Generic-Fabric",
+      "type": "FabricJobEvents",
+      "properties": {
+        "eventScope": "Item",
+        "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+        "itemId": "3e035f81-2c25-416b-9009-b7ba22e444ab",
+        "includedEventTypes": [
+          "Microsoft.Fabric.JobEvents.ItemJobCreated",
+          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
+          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
+          "Microsoft.Fabric.JobEvents.ItemJobFailed"
+        ],
+        "filters": []
+      }
+    },
+    {
       "id": "1f00e84d-959f-46bd-b2d7-ce8cb28d6f18",
       "name": "Fabric-Accelerator-Workspace",
       "type": "FabricWorkspaceItemEvents",
@@ -55,6 +72,23 @@
           "Microsoft.Fabric.OneLake.FolderCreated",
           "Microsoft.Fabric.OneLake.FolderDeleted",
           "Microsoft.Fabric.OneLake.FolderRenamed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "b8778268-3533-44ad-b1a2-8a928e1beefa",
+      "name": "Master-ELT-MirrorDB",
+      "type": "FabricJobEvents",
+      "properties": {
+        "eventScope": "Item",
+        "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+        "itemId": "f6fbd55e-12b9-4ac8-9e6e-a37049dcca2d",
+        "includedEventTypes": [
+          "Microsoft.Fabric.JobEvents.ItemJobCreated",
+          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
+          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
+          "Microsoft.Fabric.JobEvents.ItemJobFailed"
         ],
         "filters": []
       }
@@ -152,43 +186,13 @@
           "schema": {
             "columns": [
               {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "datacontenttype",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
                 "name": "specversion",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
               },
               {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "dataschemaversion",
+                "name": "id",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
@@ -200,70 +204,88 @@
                 "items": null
               },
               {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
                 "name": "data",
                 "type": "Record",
                 "fields": [
                   {
-                    "name": "itemId",
+                    "name": "api",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemName",
+                    "name": "clientRequestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceId",
+                    "name": "requestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceName",
+                    "name": "eTag",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemKind",
+                    "name": "contentType",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalId",
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalType",
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   }
                 ],
-                "items": null
-              },
-              {
-                "name": "EventProcessedUtcTime",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "PartitionId",
-                "type": "BigInt",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "EventEnqueuedUtcTime",
-                "type": "DateTime",
-                "fields": null,
                 "items": null
               }
             ]
@@ -299,43 +321,13 @@
           "schema": {
             "columns": [
               {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "datacontenttype",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
                 "name": "specversion",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
               },
               {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "dataschemaversion",
+                "name": "id",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
@@ -347,70 +339,88 @@
                 "items": null
               },
               {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
                 "name": "data",
                 "type": "Record",
                 "fields": [
                   {
-                    "name": "itemId",
+                    "name": "api",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemName",
+                    "name": "clientRequestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceId",
+                    "name": "requestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceName",
+                    "name": "eTag",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemKind",
+                    "name": "contentType",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalId",
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalType",
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   }
                 ],
-                "items": null
-              },
-              {
-                "name": "EventProcessedUtcTime",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "PartitionId",
-                "type": "BigInt",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "EventEnqueuedUtcTime",
-                "type": "DateTime",
-                "fields": null,
                 "items": null
               }
             ]
@@ -446,43 +456,13 @@
           "schema": {
             "columns": [
               {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "datacontenttype",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
                 "name": "specversion",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
               },
               {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "dataschemaversion",
+                "name": "id",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
@@ -494,70 +474,88 @@
                 "items": null
               },
               {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
                 "name": "data",
                 "type": "Record",
                 "fields": [
                   {
-                    "name": "itemId",
+                    "name": "api",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemName",
+                    "name": "clientRequestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceId",
+                    "name": "requestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceName",
+                    "name": "eTag",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemKind",
+                    "name": "contentType",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalId",
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalType",
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   }
                 ],
-                "items": null
-              },
-              {
-                "name": "EventProcessedUtcTime",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "PartitionId",
-                "type": "BigInt",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "EventEnqueuedUtcTime",
-                "type": "DateTime",
-                "fields": null,
                 "items": null
               }
             ]
@@ -569,7 +567,7 @@
   "streams": [
     {
       "id": "8cf2cc6f-bbd9-487b-8744-e424af00537e",
-      "name": "es_fabricEvents-stream",
+      "name": "es_fabricEvents",
       "type": "DefaultStream",
       "properties": {},
       "inputNodes": [
@@ -580,6 +578,9 @@
           "name": "Fabric-Accelerator-Workspace"
         },
         {
+          "name": "L1Transform-Generic-Fabric"
+        },
+        {
           "name": "lh-bronze-storage"
         },
         {
@@ -587,6 +588,9 @@
         },
         {
           "name": "Master-ELT-ASQL"
+        },
+        {
+          "name": "Master-ELT-MirrorDB"
         },
         {
           "name": "Optimize-DeltaLake-Tabless"
@@ -600,7 +604,7 @@
       "type": "Filter",
       "inputNodes": [
         {
-          "name": "es_fabricEvents-stream"
+          "name": "es_fabricEvents"
         }
       ],
       "properties": {
@@ -623,21 +627,9 @@
       },
       "inputSchemas": [
         {
-          "name": "es_fabricEvents-stream",
+          "name": "es_fabricEvents",
           "schema": {
             "columns": [
-              {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "datacontenttype",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
               {
                 "name": "specversion",
                 "type": "Nvarchar(max)",
@@ -645,25 +637,7 @@
                 "items": null
               },
               {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "dataschemaversion",
+                "name": "id",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
@@ -675,70 +649,88 @@
                 "items": null
               },
               {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
                 "name": "data",
                 "type": "Record",
                 "fields": [
                   {
-                    "name": "itemId",
+                    "name": "api",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemName",
+                    "name": "clientRequestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceId",
+                    "name": "requestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceName",
+                    "name": "eTag",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemKind",
+                    "name": "contentType",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalId",
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalType",
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   }
                 ],
-                "items": null
-              },
-              {
-                "name": "EventProcessedUtcTime",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "PartitionId",
-                "type": "BigInt",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "EventEnqueuedUtcTime",
-                "type": "DateTime",
-                "fields": null,
                 "items": null
               }
             ]
@@ -751,7 +743,7 @@
       "type": "Filter",
       "inputNodes": [
         {
-          "name": "es_fabricEvents-stream"
+          "name": "es_fabricEvents"
         }
       ],
       "properties": {
@@ -774,21 +766,9 @@
       },
       "inputSchemas": [
         {
-          "name": "es_fabricEvents-stream",
+          "name": "es_fabricEvents",
           "schema": {
             "columns": [
-              {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "datacontenttype",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
               {
                 "name": "specversion",
                 "type": "Nvarchar(max)",
@@ -796,25 +776,7 @@
                 "items": null
               },
               {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "dataschemaversion",
+                "name": "id",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
@@ -826,70 +788,88 @@
                 "items": null
               },
               {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
                 "name": "data",
                 "type": "Record",
                 "fields": [
                   {
-                    "name": "itemId",
+                    "name": "api",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemName",
+                    "name": "clientRequestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceId",
+                    "name": "requestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceName",
+                    "name": "eTag",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemKind",
+                    "name": "contentType",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalId",
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalType",
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   }
                 ],
-                "items": null
-              },
-              {
-                "name": "EventProcessedUtcTime",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "PartitionId",
-                "type": "BigInt",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "EventEnqueuedUtcTime",
-                "type": "DateTime",
-                "fields": null,
                 "items": null
               }
             ]
@@ -902,7 +882,7 @@
       "type": "Filter",
       "inputNodes": [
         {
-          "name": "es_fabricEvents-stream"
+          "name": "es_fabricEvents"
         }
       ],
       "properties": {
@@ -925,21 +905,9 @@
       },
       "inputSchemas": [
         {
-          "name": "es_fabricEvents-stream",
+          "name": "es_fabricEvents",
           "schema": {
             "columns": [
-              {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "datacontenttype",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
               {
                 "name": "specversion",
                 "type": "Nvarchar(max)",
@@ -947,25 +915,7 @@
                 "items": null
               },
               {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "dataschemaversion",
+                "name": "id",
                 "type": "Nvarchar(max)",
                 "fields": null,
                 "items": null
@@ -977,70 +927,88 @@
                 "items": null
               },
               {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
                 "name": "data",
                 "type": "Record",
                 "fields": [
                   {
-                    "name": "itemId",
+                    "name": "api",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemName",
+                    "name": "clientRequestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceId",
+                    "name": "requestId",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "workspaceName",
+                    "name": "eTag",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "itemKind",
+                    "name": "contentType",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalId",
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   },
                   {
-                    "name": "executingPrincipalType",
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
                     "type": "Nvarchar(max)",
                     "fields": null,
                     "items": null
                   }
                 ],
-                "items": null
-              },
-              {
-                "name": "EventProcessedUtcTime",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "PartitionId",
-                "type": "BigInt",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "EventEnqueuedUtcTime",
-                "type": "DateTime",
-                "fields": null,
                 "items": null
               }
             ]

@@ -15,6 +15,21 @@
 # META   }
 # META }
 
+# MARKDOWN ********************
+
+# ### Spark Optimization Configs
+
+# CELL ********************
+
+spark.conf.set("spark.native.enabled", "true")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 %run /DeltaLakeFunctions

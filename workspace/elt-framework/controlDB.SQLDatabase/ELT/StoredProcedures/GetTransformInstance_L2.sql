@@ -3,9 +3,9 @@ CREATE PROCEDURE [ELT].[GetTransformInstance_L2]
 	@StreamName varchar(100) = '%',
 	@MaxTransformInstance int = 10,
 	@L2TransformInstanceId INT = NULL, --To fetch all transform instances set Parameter as NULL otherwise provide a specific instance id
-	@DelayL2TransformationFlag INT=NULL, --Pass @DelayL2TransformationFlag=0 to fetch all instances that needs to be transformed in the current pipeline (usually the ingestion pipeline). Pass =1 to fetch @DelayL2TransformationFlagh all transformations that are scheduled for a later time.
+	@DelayL2TransformationFlag INT= NULL, --Pass @DelayL2TransformationFlag=0 to fetch all instances that needs to be transformed in the current pipeline (usually the ingestion pipeline). Pass =1 to fetch @DelayL2TransformationFlagh all transformations that are scheduled for a later time.
 	@InputType varchar(15)	= '%',
-	@L2TransformID INT=0 --To Fetch all transformations for a specific stream pass 0 otherwise provide TransformId prersent in L2Transsformdefinition
+	@L2TransformID INT=NULL --To Fetch all transformations for a specific stream pass NULL otherwise provide TransformId prersent in L2Transsformdefinition
 AS
 begin
 	--Limit Number of Transform Instances to prevent queuing at DWH
@@ -56,10 +56,10 @@ begin
 				AND (L2TI.[ActiveFlag]=1 OR L2TI.[ReRunL2TransformFlag]=1)
 				AND L2TI.[L2TransformInstanceID] = COALESCE(@L2TransformInstanceId, L2TI.[L2TransformInstanceID])
 				AND (L2TI.[L2TransformStatus] IS NULL OR L2TI.[L2TransformStatus] NOT IN ('Running','DWUpload'))  --Fetch new instances and ignore instances that are currently running
-				AND ID.[DelayL2TransformationFlag] = COALESCE(@DelayL2TransformationFlag,ID.[DelayL2TransformationFlag])
-				AND L2TD.[InputType] like COALESCE(@InputType,L2TD.[InputType])
-				--AND ISNULL(L2TI.RetryCount,0) <= L2TD.MaxRetries
-				AND  L2TI.[L2TransformID]= (CASE WHEN @L2TransformID=0 then  L2TI.[L2TransformID] ELSE  @L2TransformID END)
+			    AND ID.[DelayL2TransformationFlag] = COALESCE(@DelayL2TransformationFlag,ID.[DelayL2TransformationFlag])
+				AND ISNULL(L2TI.RetryCount,0) <= L2TD.MaxRetries
+				AND L2TD.[InputType] like COALESCE(@InputType,L2TD.[InputType])				
+				AND  L2TI.[L2TransformID] = COALESCE(@L2TransformID,L2TI.[L2TransformID])
 			ORDER BY L2TD.RunSequence ASC, L2TI.[L2TransformInstanceID] ASC
 END
 

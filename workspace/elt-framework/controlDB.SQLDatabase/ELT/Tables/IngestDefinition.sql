@@ -34,6 +34,7 @@ CREATE TABLE [ELT].[IngestDefinition] (
     [CreatedTimestamp]          DATETIME       CONSTRAINT [DC_IngestDefinition_CreatedTimestamp] DEFAULT (CONVERT([datetime],(CONVERT([datetimeoffset],getdate()) AT TIME ZONE 'AUS Eastern Standard Time'))) NOT NULL,
     [ModifiedBy]                NVARCHAR (128) CONSTRAINT [DC_IngestDefinition_ModifiedBy] DEFAULT (suser_sname()) NULL,
     [ModifiedTimestamp]         DATETIME       CONSTRAINT [DC_IngestDefinition_ModifiedTimestamp] DEFAULT (CONVERT([datetime],(CONVERT([datetimeoffset],getdate()) AT TIME ZONE 'AUS Eastern Standard Time'))) NULL,
+    [DestinationRawTable]       VARCHAR (200)  NULL,
     CONSTRAINT [PK_IngestDefinition] PRIMARY KEY CLUSTERED ([IngestID] ASC),
     CONSTRAINT [CC_IngestDefinition_DataMapping] CHECK (isjson([DataMapping])=(1)),
     CONSTRAINT [CC_IngestDefinition_MaxIntervalMinutes] CHECK ([MaxIntervalMinutes] IS NULL OR [MaxIntervalMinutes]>(0)),

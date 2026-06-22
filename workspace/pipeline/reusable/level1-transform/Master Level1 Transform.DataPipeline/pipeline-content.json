@@ -184,6 +184,18 @@
                   "SilverWorkspaceID": {
                     "value": "@pipeline().parameters.SilverWorkspaceID",
                     "type": "Expression"
+                  },
+                  "InputRawTable": {
+                    "value": "@item().InputRawTable",
+                    "type": "Expression"
+                  },
+                  "DataFromTimestamp": {
+                    "value": "@item().DataFromTimestamp",
+                    "type": "Expression"
+                  },
+                  "DataToTimestamp": {
+                    "value": "@item().DataToTimestamp",
+                    "type": "Expression"
                   }
                 },
                 "waitOnCompletion": true

@@ -1,5 +1,5 @@
 {
-  "schema_version": "60",
+  "schema_version": 74,
   "pagesNavWidth": 223.33334350585938,
   "autoRefresh": {
     "enabled": true,
@@ -217,7 +217,6 @@
       "visualOptions": {
         "table__enableRenderLinks": false,
         "colorRulesDisabled": true,
-        "colorStyle": "light",
         "crossFilterDisabled": false,
         "drillthroughDisabled": true,
         "crossFilter": [],
@@ -376,7 +375,6 @@
       "visualOptions": {
         "table__enableRenderLinks": false,
         "colorRulesDisabled": false,
-        "colorStyle": "light",
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "crossFilter": [],
@@ -637,7 +635,6 @@
       "visualOptions": {
         "table__enableRenderLinks": true,
         "colorRulesDisabled": false,
-        "colorStyle": "light",
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "crossFilter": [
@@ -1003,6 +1000,8 @@
         "crossFilterDisabled": false,
         "drillthroughDisabled": false,
         "crossFilter": [],
+        "seriesColors": {},
+        "forceAxisTicks": false,
         "drillthrough": []
       }
     },
@@ -1260,11 +1259,11 @@
   "dataSources": [
     {
       "kind": "kusto-trident",
-      "scopeId": "kusto-trident",
-      "clusterUri": "",
-      "database": "b22b1edd-6292-97ea-4089-fe9314ea1177",
-      "name": "kdb_fabricEvents",
       "id": "2505cb77-5a0e-49ed-8f65-9e0b9c774870",
+      "name": "kdb_fabricEvents",
+      "clusterUri": "",
+      "databaseArtifactId": "14ea1177-fe93-4089-97ea-6292b22b1edd",
+      "database": "b22b1edd-6292-97ea-4089-fe9314ea1177",
       "workspace": "00000000-0000-0000-0000-000000000000"
     }
   ],
@@ -1523,7 +1522,7 @@
         "kind": "inline",
         "dataSourceId": "2505cb77-5a0e-49ed-8f65-9e0b9c774870"
       },
-      "text": "let minTs = now()-60d; //last n days\nlet maxTs = now(); \nmaterialized_view(\"dailyAggJobEvents\")\n| where [\"time\"] between (minTs ..maxTs) and isnotempty( itemName) \n| extend jobDurationMin = datetime_diff('minute',jobEndTimeUtc,jobStartTimeUtc)\n| make-series tsJobDurationMin = avg(jobDurationMin) default= long(null) on [\"time\"] from minTs to maxTs step 1d by itemName\n| extend tsJobDurationMin = series_fill_linear(tsJobDurationMin) // replace null values with interpolated data\n| extend (rsquare, slope) = series_fit_line(tsJobDurationMin)\n| project itemName, slope\n| where slope>_slopeThreshold\n| order by slope desc",
+      "text": "let minTs = now()-365d; //last n days\nlet maxTs = now(); \nmaterialized_view(\"dailyAggJobEvents\")\n| where [\"time\"] between (minTs ..maxTs) and isnotempty( itemName) \n| extend jobDurationMin = datetime_diff('minute',jobEndTimeUtc,jobStartTimeUtc)\n| make-series tsJobDurationMin = avg(jobDurationMin) default= long(null) on [\"time\"] from minTs to maxTs step 1d by itemName\n| extend tsJobDurationMin = series_fill_linear(tsJobDurationMin) // replace null values with interpolated data\n| extend (rsquare, slope) = series_fit_line(tsJobDurationMin)\n| project itemName, slope\n| where slope>_slopeThreshold\n| order by slope desc",
       "id": "857e9e6c-d896-4a75-bbd3-d819729ad89c",
       "usedVariables": [
         "_slopeThreshold"

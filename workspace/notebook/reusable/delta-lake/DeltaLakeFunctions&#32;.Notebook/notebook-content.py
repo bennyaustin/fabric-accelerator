@@ -35,6 +35,8 @@
 from delta.tables import *
 from pyspark.sql.functions import *
 import json
+from pyspark.sql import DataFrame
+import datetime
 
 spark.conf.set("spark.sql.parquet.vorder.enabled", "true")
 spark.conf.set("spark.microsoft.delta.optimizeWrite.enabled", "true")
@@ -452,7 +454,7 @@ def optimizeDelta(tableName):
   # ##########################################################################################################################################   
   # Function: optimizeDelta
   # Function that implements the compaction of small files for Delta Tables https://docs.delta.io/latest/optimizations-oss.html#language-python
-  # Also removes unused files beyond default retention period
+  # Also removes unused files beyond default retention period and runs REORG TABLE to further optimize query performance.
   # 
   # Parameters:
   # tableName = Delta lake tableName in current lakehouse
@@ -466,9 +468,119 @@ def optimizeDelta(tableName):
 
     deltaTable = DeltaTable.forName(spark,tableName)
     assert deltaTable is not None, "Delta lake table does not exist"
+
+    # Compact small files
     deltaTable.optimize().executeCompaction()
+
+    # Remove unused files beyond retention period
     deltaTable.vacuum()
+
+    # Run REORG TABLE for additional query performance optimization (Lakehouse SQL optimization)
+    spark.sql(f"REORG TABLE {tableName} APPLY (PURGE)")
+
     return
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# # readMirrorDBTable()
+# Read from a mirrored DB table using a 4-part name: **_workspaceName.mirrorDBName.schemaName.tableName_**
+
+# CELL ********************
+
+def readMirrorDBTable(
+    workspaceName: str,
+    mirrorDBName: str,
+    schemaName: str,
+    tableName: str,
+    watermarkColumnName: str = None,
+    fromTimeStamp: str = None,
+    toTimeStamp: str = None,
+) -> DataFrame:
+
+    """
+    Read from a mirrored DB table using a 4-part name:
+    workspaceName.mirrorDBName.schemaName.tableName
+
+    Required:
+        workspaceName, mirrorDBName, schemaName, tableName
+
+    Optional:
+        watermarkColumnName, fromTimeStamp, toTimeStamp
+        If fromTimeStamp/toTimeStamp are provided, a WHERE clause on watermarkColumnName
+        is added with the corresponding range.
+    """
+
+    # ---- Validation of required parameters ----
+    for param_name, param_value in [
+        ("workspaceName", workspaceName),
+        ("mirrorDBName", mirrorDBName),
+        ("schemaName", schemaName),
+        ("tableName", tableName),
+    ]:
+        if not isinstance(param_value, str) or not param_value.strip():
+            raise ValueError(f"Parameter '{param_name}' is required and must be a non-empty string.")
+
+    # # ---- Validation for watermark usage ----
+    # if (fromTimeStamp or toTimeStamp) and not watermarkColumnName:
+    #     raise ValueError(
+    #         "Parameter 'watermarkColumnName' is required when "
+    #         "'fromTimeStamp' or 'toTimeStamp' is provided."
+    #     )
+
+    # ---- Validation: fromTimeStamp must be earlier than toTimeStamp ----
+    if fromTimeStamp and toTimeStamp:
+        try:
+            from_dt = datetime.datetime.fromisoformat(fromTimeStamp)
+            to_dt = datetime.datetime.fromisoformat(toTimeStamp)
+        except ValueError:
+            raise ValueError(
+                "fromTimeStamp and toTimeStamp must be ISO-8601 datetime strings, "
+                "e.g. '2013-01-01T00:00:00'."
+            )
+        if from_dt > to_dt:
+            raise ValueError("fromTimeStamp must be earlier than toTimeStamp.")
+
+    # Helper to safely quote identifiers (handles dashes etc.)
+    def quote_identifier(identifier: str) -> str:
+        # Escape any backticks inside the identifier
+        escaped = identifier.replace("`", "``")
+        return f"`{escaped}`"
+
+    full_table_name = ".".join([
+        quote_identifier(workspaceName),
+        quote_identifier(mirrorDBName),
+        quote_identifier(schemaName),
+        quote_identifier(tableName),
+    ])
+
+    where_clauses = []
+
+    if watermarkColumnName:
+        col_expr = quote_identifier(watermarkColumnName)
+
+        # Build range conditions if timestamps are provided
+        if fromTimeStamp:
+            # assuming timestamp literals are passed as strings compatible with Spark (e.g. '2024-01-01T00:00:00')
+            where_clauses.append(f"{col_expr} >= TIMESTAMP '{fromTimeStamp}'")
+        if toTimeStamp:
+            where_clauses.append(f"{col_expr} < TIMESTAMP '{toTimeStamp}'")
+
+    # Base query
+    query = f"SELECT * FROM {full_table_name}"
+
+    if where_clauses:
+        query += " WHERE " + " AND ".join(where_clauses)
+
+    # Execute via Spark SQL and return DataFrame
+    df = spark.sql(query)
+    return df
 
 # METADATA ********************
 

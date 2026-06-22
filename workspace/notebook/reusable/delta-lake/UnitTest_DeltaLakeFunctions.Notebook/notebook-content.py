@@ -209,3 +209,64 @@ print(hwm)
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# CELL ********************
+
+# readMirrorDBTable - No watermark filter
+df_all = readMirrorDBTable(
+    workspaceName="FabricMDP",
+    mirrorDBName="WideWorldImporters-mirror",
+    schemaName="Application",
+    tableName="PaymentMethods"
+)
+display(df_all)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# readMirrorDBTable - With watermark and fromTimeStamp only
+df_from = readMirrorDBTable(
+    workspaceName="FabricMDP",
+    mirrorDBName="WideWorldImporters-mirror",
+    schemaName="Sales",
+    tableName="Orders",
+    watermarkColumnName="LastEditedWhen",
+    fromTimeStamp="2013-01-01T00:00:00"
+)
+
+display(df_from)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# readMirrorDBTable - With full range
+df_range = readMirrorDBTable(
+    workspaceName="FabricMDP",
+    mirrorDBName="WideWorldImporters-mirror",
+    schemaName="Sales",
+    tableName="CustomerTransactions",
+    watermarkColumnName="LastEditedWhen",
+    fromTimeStamp="2013-01-01T00:00:00",
+    toTimeStamp="2024-02-01T00:00:00"
+)
+
+display(df_range)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }

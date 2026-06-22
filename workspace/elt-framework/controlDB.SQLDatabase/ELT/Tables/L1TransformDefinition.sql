@@ -4,9 +4,9 @@ CREATE TABLE [ELT].[L1TransformDefinition] (
     [ComputePath]                  VARCHAR (200)  NULL,
     [ComputeName]                  VARCHAR (100)  NULL,
     [CustomParameters]             VARCHAR (MAX)  NULL,
-    [InputRawFileSystem]           VARCHAR (50)   NOT NULL,
-    [InputRawFileFolder]           VARCHAR (200)  NOT NULL,
-    [InputRawFile]                 VARCHAR (200)  NOT NULL,
+    [InputRawFileSystem]           VARCHAR (50)   NULL,
+    [InputRawFileFolder]           VARCHAR (200)  NULL,
+    [InputRawFile]                 VARCHAR (200)  NULL,
     [InputRawFileDelimiter]        CHAR (1)       NULL,
     [InputFileHeaderFlag]          BIT            NULL,
     [OutputL1CurateFileSystem]     VARCHAR (50)   NOT NULL,
@@ -26,6 +26,7 @@ CREATE TABLE [ELT].[L1TransformDefinition] (
     [CreatedTimestamp]             DATETIME       CONSTRAINT [DC_L1TransformDefinition_CreatedTimestamp] DEFAULT (CONVERT([datetime],(CONVERT([datetimeoffset],getdate()) AT TIME ZONE 'AUS Eastern Standard Time'))) NOT NULL,
     [ModifiedBy]                   NVARCHAR (128) CONSTRAINT [DC_L1TransformDefinition_ModifiedBy] DEFAULT (suser_sname()) NULL,
     [ModifiedTimestamp]            DATETIME       CONSTRAINT [DC_L1TransformDefinition_ModifiedTimestamp] DEFAULT (CONVERT([datetime],(CONVERT([datetimeoffset],getdate()) AT TIME ZONE 'AUS Eastern Standard Time'))) NULL,
+    [InputRawTable]                VARCHAR (200)  NULL,
     CONSTRAINT [PK_L1TransformDefinition] PRIMARY KEY CLUSTERED ([L1TransformID] ASC),
     CONSTRAINT [CC_L1TransformDefinition_CustomParameters] CHECK (isjson([CustomParameters])=(1)),
     CONSTRAINT [CC_L1TransformDefinition_OutputDWTableWriteMode] CHECK ([OutputDWTableWriteMode]='append' OR [OutputDWTableWriteMode]='overwrite' OR [OutputDWTableWriteMode]='error' OR [OutputDWTableWriteMode]='errorifexists' OR [OutputDWTableWriteMode]='ignore'),
@@ -36,8 +37,8 @@ CREATE TABLE [ELT].[L1TransformDefinition] (
 
 GO
 
-CREATE NONCLUSTERED INDEX [UI_L1TransformDefinition]
-    ON [ELT].[L1TransformDefinition]([InputRawFileSystem] ASC, [InputRawFileFolder] ASC, [InputRawFile] ASC, [OutputL1CurateFileSystem] ASC, [OutputL1CuratedFolder] ASC, [OutputL1CuratedFile] ASC);
+CREATE UNIQUE NONCLUSTERED INDEX [UI_L1TransformDefinition]
+    ON [ELT].[L1TransformDefinition]([InputRawFileSystem] ASC, [InputRawFileFolder] ASC, [InputRawFile] ASC, [InputRawTable] ASC, [OutputL1CurateFileSystem] ASC, [OutputL1CuratedFolder] ASC, [OutputL1CuratedFile] ASC, [OutputDWTable] ASC);
 
 
 GO

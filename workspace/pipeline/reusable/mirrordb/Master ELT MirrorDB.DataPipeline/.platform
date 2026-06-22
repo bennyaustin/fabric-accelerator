@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Master ELT MirrorDB",
+    "description": "Generic pipeline to extract, load and transform data from any Azure SQL source"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "49dcca2d-a370-9e6e-4ac8-12b9f6fbd55e"
+  }
+}

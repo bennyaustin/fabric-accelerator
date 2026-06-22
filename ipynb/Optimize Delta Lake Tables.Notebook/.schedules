@@ -7,7 +7,7 @@
             "configuration": {
                 "type": "Weekly",
                 "startDateTime": "2024-10-13T00:00:00",
-                "endDateTime": "2025-06-30T23:59:00",
+                "endDateTime": "2027-06-30T23:59:00",
                 "localTimeZoneId": "AUS Eastern Standard Time",
                 "times": [
                     "05:15"

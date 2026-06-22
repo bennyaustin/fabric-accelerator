@@ -13,6 +13,416 @@
     "sourceQueryCulture": "en-US",
     "tables": [
       {
+        "name": "Mirror_CustomerTransactions_monthly_snapshot",
+        "sourceLineageTag": "[gold].[Mirror_CustomerTransactions_monthly_snapshot]",
+        "columns": [
+          {
+            "name": "TransactionTypeName",
+            "dataType": "string",
+            "sourceColumn": "TransactionTypeName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "TransactionTypeName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "PaymentMethodName",
+            "dataType": "string",
+            "sourceColumn": "PaymentMethodName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "PaymentMethodName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TransactionMonth",
+            "dataType": "dateTime",
+            "sourceColumn": "TransactionMonth",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "TransactionMonth",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "AmountExcludingTax",
+            "dataType": "double",
+            "sourceColumn": "AmountExcludingTax",
+            "sourceProviderType": "decimal",
+            "sourceLineageTag": "AmountExcludingTax",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "TaxAmount",
+            "dataType": "double",
+            "sourceColumn": "TaxAmount",
+            "sourceProviderType": "decimal",
+            "sourceLineageTag": "TaxAmount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "TransactionAmount",
+            "dataType": "double",
+            "sourceColumn": "TransactionAmount",
+            "sourceProviderType": "decimal",
+            "sourceLineageTag": "TransactionAmount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "OutstandingBalance",
+            "dataType": "double",
+            "sourceColumn": "OutstandingBalance",
+            "sourceProviderType": "decimal",
+            "sourceLineageTag": "OutstandingBalance",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "Mirror_CustomerTransactions_monthly_snapshot",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "gold"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "Mirror_Orders_monthly_snapshot",
+        "sourceLineageTag": "[gold].[Mirror_Orders_monthly_snapshot]",
+        "columns": [
+          {
+            "name": "SalespersonPersonID",
+            "dataType": "int64",
+            "sourceColumn": "SalespersonPersonID",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "SalespersonPersonID",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "FullName",
+            "dataType": "string",
+            "sourceColumn": "FullName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "FullName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "OrderMonth",
+            "dataType": "dateTime",
+            "sourceColumn": "OrderMonth",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "OrderMonth",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "OrderCount",
+            "dataType": "int64",
+            "sourceColumn": "OrderCount",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "OrderCount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "Mirror_Orders_monthly_snapshot",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "gold"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "Mirror_PurchaseOrders_monthly_snapshot",
+        "sourceLineageTag": "[gold].[Mirror_PurchaseOrders_monthly_snapshot]",
+        "columns": [
+          {
+            "name": "SupplierID",
+            "dataType": "int64",
+            "sourceColumn": "SupplierID",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "SupplierID",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "POCount",
+            "dataType": "int64",
+            "sourceColumn": "POCount",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "POCount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "OrderDate",
+            "dataType": "dateTime",
+            "sourceColumn": "OrderDate",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "OrderDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "Mirror_PurchaseOrders_monthly_snapshot",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "gold"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "Mirror_SupplierTransactions_monthly_snapshot",
+        "sourceLineageTag": "[gold].[Mirror_SupplierTransactions_monthly_snapshot]",
+        "columns": [
+          {
+            "name": "SupplierID",
+            "dataType": "int64",
+            "sourceColumn": "SupplierID",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "SupplierID",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TransactionTypeName",
+            "dataType": "string",
+            "sourceColumn": "TransactionTypeName",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "TransactionTypeName",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "TransactionDate",
+            "dataType": "dateTime",
+            "sourceColumn": "TransactionDate",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "TransactionDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "POAmount",
+            "dataType": "double",
+            "sourceColumn": "POAmount",
+            "sourceProviderType": "decimal",
+            "sourceLineageTag": "POAmount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "TaxAmount",
+            "dataType": "double",
+            "sourceColumn": "TaxAmount",
+            "sourceProviderType": "decimal",
+            "sourceLineageTag": "TaxAmount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "POCount",
+            "dataType": "int64",
+            "sourceColumn": "POCount",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "POCount",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "Mirror_SupplierTransactions_monthly_snapshot",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "gold"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
         "name": "customertransactions_monthly_snapshot",
         "sourceLineageTag": "[gold].[customertransactions_monthly_snapshot]",
         "columns": [

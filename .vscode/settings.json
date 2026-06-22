@@ -1,0 +1,5 @@
+{
+    "dataworkspace.excludedProjects": [
+        "workspace/elt-framework/controlDB.SQLDatabase/controlDB.sqlproj"
+    ]
+}

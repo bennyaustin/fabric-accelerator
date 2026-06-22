@@ -24,6 +24,7 @@ AS
 			 --Raw
 			 ,TD.[InputRawFileDelimiter]
 			 ,TD.[InputFileHeaderFlag]
+			 ,TD.[InputRawTable]
 			
 			--Curated File
 			--Need to test how this performs with a file drop and filedrop reload.

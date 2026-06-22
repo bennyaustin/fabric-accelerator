@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Ingest MirrorDB Table",
+    "description": "Reusable Data Factory pipeline to Ingest data from SQL Server table"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8ce93ec6-1295-b4f7-48b3-f8d92900eb46"
+  }
+}

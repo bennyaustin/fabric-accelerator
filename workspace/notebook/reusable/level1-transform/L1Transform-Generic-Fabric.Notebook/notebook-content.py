@@ -17,6 +17,17 @@
 
 # CELL ********************
 
+spark.conf.set("spark.native.enabled", "true")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 %run /commonTransforms
 
 # METADATA ********************
@@ -75,6 +86,9 @@ OutputDWTable = None
 OutputDWTableWriteMode = None
 ReRunL1TransformFlag = None
 WatermarkColName = None
+InputRawTable = None
+DataFromTimestamp = None
+DataToTimestamp = None
 
 # METADATA ********************
 
@@ -86,27 +100,30 @@ WatermarkColName = None
 # CELL ********************
 
 # # Parameters for Testing only, should be commented off
-# L1TransformInstanceID = 2
-# L1TransformID = 21
-# IngestID = 21
+# L1TransformInstanceID = 6214
+# L1TransformID = 84
+# IngestID = 57
 # CustomParameters = None
-# InputRawFileSystem = 'Files'
-# InputRawFileFolder = 'raw-bronze/wwi/Sales/Orders/2013-01'
-# InputRawFile = 'Sales_Orders_2013-01-01_000000.parquet'
+# InputRawFileSystem = None
+# InputRawFileFolder = None
+# InputRawFile = None
 # InputRawFileDelimiter = None
 # InputFileHeaderFlag = None
-# OutputL1CurateFileSystem = None
-# OutputL1CuratedFolder = None
-# OutputL1CuratedFile = None
+# OutputL1CurateFileSystem = 'Tables'
+# OutputL1CuratedFolder = 'Application'
+# OutputL1CuratedFile = 'PaymentMethods'
 # OutputL1CuratedFileDelimiter = None
 # OutputL1CuratedFileFormat = None
 # OutputL1CuratedFileWriteMode = None
 # OutputDWStagingTable = None
-# LookupColumns = 'OrderID'
-# OutputDWTable = 'silver.sales_orders'
-# OutputDWTableWriteMode = 'append'
+# LookupColumns = None
+# OutputDWTable = 'silver.Mirror_Application_PaymentMethods'
+# OutputDWTableWriteMode = 'overwrite'
 # ReRunL1TransformFlag = None
-# WatermarkColName = 'LastEditedWhen'
+# WatermarkColName = None
+# InputRawTable = 'WideWorldImporters-mirror.Application.PaymentMethods'
+# DataFromTimestamp = '1900-01-01T00:00:00Z'
+# DataToTimestamp = '2026-04-25T23:53:46Z'
 
 # METADATA ********************
 
@@ -121,24 +138,58 @@ WatermarkColName = None
 
 # CELL ********************
 
-df = readFile('bronze',InputRawFileSystem,InputRawFileFolder,InputRawFile)
+#Input is Files
+if (
+    InputRawFileSystem is not None
+    and InputRawFileFolder is not None
+    and InputRawFile is not None
+    and InputRawTable is None
+):
+    df = readFile('bronze', InputRawFileSystem, InputRawFileFolder, InputRawFile)
+# Input is Mirrored Table
+elif (
+    InputRawFileSystem is None
+    and InputRawFileFolder is None
+    and InputRawFile is None
+    and InputRawTable is not None
+    and "mirror" in InputRawTable.lower()
+):
+    # Split the table name into database, schema, and table parts
+    
+    parts = InputRawTable.split(".")
+    mirrorDBName, schemaName, tableName = parts[0], parts[1], parts[2]
+    mirrorDBWorkspace = notebookutils.runtime.context.get("defaultLakehouseWorkspaceName")
+    df = readMirrorDBTable(
+        workspaceName=mirrorDBWorkspace,
+        mirrorDBName=mirrorDBName,
+        schemaName=schemaName,
+        tableName=tableName,
+        watermarkColumnName=WatermarkColName,
+        fromTimeStamp=DataFromTimestamp,
+        toTimeStamp=DataToTimestamp
+    )
+
 ingestCount = df.count()
 
-ct=CommonTransforms(df)
+ct = CommonTransforms(df)
 
 # Remove duplicates
 if LookupColumns is not None:
-    df=ct.deDuplicate(LookupColumns.split('|'))
+    df = ct.deDuplicate(LookupColumns.split("|"))
 else:
-    df=ct.deDuplicate()
+    df = ct.deDuplicate()
 
 # Remove leading and trailing spaces from all string columns
-df=ct.trim()
+df = ct.trim()
 
-# # Replace Null Value with generic values
+# Replace Null Value with generic values
+# Note: ensure CommonTransforms.replaceNull can handle these types/values correctly
 df = ct.replaceNull(0)
+# Replace string nulls (non-date)
 df = ct.replaceNull("NA")
+# Replace date-like nulls (YYYY-MM-DD)
 df = ct.replaceNull("2020-01-01")
+
 
 # METADATA ********************
 
@@ -149,7 +200,7 @@ df = ct.replaceNull("2020-01-01")
 
 # CELL ********************
 
-display(df)
+# display(df)
 
 # METADATA ********************
 

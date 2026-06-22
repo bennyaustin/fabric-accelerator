@@ -1,0 +1,359 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderStoredProcedureName": "[ELT].[GetIngestDefinition]",
+            "storedProcedureParameters": {
+              "MaxIngestInstance": {
+                "type": "Int32",
+                "value": "100"
+              },
+              "SourceSystemName": {
+                "type": "String",
+                "value": {
+                  "value": "@pipeline().parameters.SourceSystemName",
+                  "type": "Expression"
+                }
+              },
+              "StreamName": {
+                "type": "String",
+                "value": {
+                  "value": "@pipeline().parameters.StreamName",
+                  "type": "Expression"
+                }
+              }
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "AzureSqlTable",
+            "typeProperties": {
+              "database": "controlDB-78d6902e-70ea-4fb0-b51e-af3f2aaee3b7"
+            },
+            "schema": [],
+            "externalReferences": {
+              "connection": "78e8d795-a55c-412e-9b76-47ba404b4d51"
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get Mirrored Tables",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "items": {
+            "value": "@activity('Get Mirrored Tables').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "ExecutePipeline",
+              "typeProperties": {
+                "pipeline": {
+                  "referenceName": "8ce93ec6-1295-b4f7-48b3-f8d92900eb46",
+                  "type": "PipelineReference"
+                },
+                "parameters": {
+                  "IngestID": {
+                    "value": "@item().IngestID",
+                    "type": "Expression"
+                  },
+                  "SourceSystemName": {
+                    "value": "@item().SourceSystemName",
+                    "type": "Expression"
+                  },
+                  "StreamName": {
+                    "value": "@item().StreamName",
+                    "type": "Expression"
+                  },
+                  "EntityName": {
+                    "value": "@item().EntityName",
+                    "type": "Expression"
+                  },
+                  "WatermarkColName": {
+                    "value": "@item().WatermarkColName",
+                    "type": "Expression"
+                  },
+                  "LastDeltaDate": {
+                    "value": "@item().LastDeltaDate",
+                    "type": "Expression"
+                  },
+                  "DataFromTimestamp": {
+                    "value": "@item().DataFromTimestamp",
+                    "type": "Expression"
+                  },
+                  "DataToTimestamp": {
+                    "value": "@item().DataToTimestamp",
+                    "type": "Expression"
+                  },
+                  "LastDeltaNumber": {
+                    "value": "@item().LastDeltaNumber",
+                    "type": "Expression"
+                  },
+                  "DataFromNumber": {
+                    "value": "@item().DataFromNumber",
+                    "type": "Expression"
+                  },
+                  "DataToNumber": {
+                    "value": "@item().DataToNumber",
+                    "type": "Expression"
+                  },
+                  "DataFormat": {
+                    "value": "@item().DataFormat",
+                    "type": "Expression"
+                  },
+                  "SourceStructure": {
+                    "value": "@item().SourceStructure",
+                    "type": "Expression"
+                  },
+                  "MaxIntervalMinutes": {
+                    "value": "@item().MaxIntervalMinutes",
+                    "type": "Expression"
+                  },
+                  "MaxIntervalNumber": {
+                    "value": "@item().MaxIntervalNumber",
+                    "type": "Expression"
+                  },
+                  "DataMapping": {
+                    "value": "@item().DataMapping",
+                    "type": "Expression"
+                  },
+                  "RunSequence": {
+                    "value": "@item().RunSequence",
+                    "type": "Expression"
+                  },
+                  "ActiveFlag": {
+                    "value": "@item().ActiveFlag",
+                    "type": "Expression"
+                  },
+                  "L1TransformationReqdFlag": {
+                    "value": "@item().L1TransformationReqdFlag",
+                    "type": "Expression"
+                  },
+                  "L2TransformationReqdFlag": {
+                    "value": "@item().L2TransformationReqdFlag",
+                    "type": "Expression"
+                  },
+                  "DelayL1TransformationFlag": {
+                    "value": "@item().DelayL1TransformationFlag",
+                    "type": "Expression"
+                  },
+                  "DelayL2TransformationFlag": {
+                    "value": "@item().DelayL2TransformationFlag",
+                    "type": "Expression"
+                  },
+                  "DestinationRawFileSystem": {
+                    "value": "@item().DestinationRawFileSystem",
+                    "type": "Expression"
+                  },
+                  "DestinationRawFolder": {
+                    "value": "@item().DestinationRawFolder",
+                    "type": "Expression"
+                  },
+                  "DestinationRawFile": {
+                    "value": "@item().DestinationRawFile",
+                    "type": "Expression"
+                  },
+                  "SourceSQL": {
+                    "value": "@item().SourceSQL",
+                    "type": "Expression"
+                  },
+                  "StatSQL": {
+                    "value": "@item().StatSQL",
+                    "type": "Expression"
+                  },
+                  "ReloadFlag": {
+                    "value": "@item().ReloadFlag",
+                    "type": "Expression"
+                  },
+                  "ADFPipelineRunID": {
+                    "value": "@item().ADFPipelineRunID",
+                    "type": "Expression"
+                  },
+                  "BronzeObjectID": {
+                    "value": "@pipeline().parameters.BronzeObjectID",
+                    "type": "Expression"
+                  },
+                  "BronzeWorkspaceID": {
+                    "value": "@pipeline().parameters.BronzeWorkspaceID",
+                    "type": "Expression"
+                  },
+                  "DestinationRawTable": {
+                    "value": "@item().DestinationRawTable",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true
+              },
+              "policy": {
+                "secureInput": false
+              },
+              "name": "Update HWM for Mirrored Table",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "ForEach Mirrored Table",
+        "dependsOn": [
+          {
+            "activity": "Get Mirrored Tables",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ExecutePipeline",
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "592635be-9979-40a3-8a91-0305b696cea2",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "SourceSystemName": {
+              "value": "@pipeline().parameters.SourceSystemName",
+              "type": "Expression"
+            },
+            "StreamName": {
+              "value": "@pipeline().parameters.StreamName",
+              "type": "Expression"
+            },
+            "MaxTransformInstance": 100,
+            "DelayL1TransformationFlag": {
+              "value": "@pipeline().parameters.DelayTransformation",
+              "type": "Expression"
+            },
+            "SilverObjectID": {
+              "value": "@pipeline().parameters.SilverObjectID",
+              "type": "Expression"
+            },
+            "SilverWorkspaceID": {
+              "value": "@pipeline().parameters.SilverWorkspaceID",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true
+        },
+        "policy": {
+          "secureInput": false
+        },
+        "name": "Level 1 Transform SILVER",
+        "dependsOn": [
+          {
+            "activity": "ForEach Mirrored Table",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ExecutePipeline",
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "29ca711a-e20f-457c-a619-35b0310193ad",
+            "type": "PipelineReference"
+          },
+          "parameters": {
+            "SourceSystemName": {
+              "value": "@pipeline().parameters.SourceSystemName",
+              "type": "Expression"
+            },
+            "StreamName": {
+              "value": "@pipeline().parameters.StreamName",
+              "type": "Expression"
+            },
+            "MaxTransformInstance": 100,
+            "DelayL2TransformationFlag": {
+              "value": "@pipeline().parameters.DelayTransformation",
+              "type": "Expression"
+            },
+            "GoldObjectID": {
+              "value": "@pipeline().parameters.GoldObjectID",
+              "type": "Expression"
+            },
+            "GoldWorkspaceID": {
+              "value": "@pipeline().parameters.GoldWorkspaceID",
+              "type": "Expression"
+            },
+            "GoldDWEndpoint": {
+              "value": "@pipeline().parameters.GoldDWEndpoint",
+              "type": "Expression"
+            }
+          },
+          "waitOnCompletion": true
+        },
+        "policy": {
+          "secureInput": false
+        },
+        "name": "Level 2 Transform GOLD",
+        "dependsOn": [
+          {
+            "activity": "Level 1 Transform SILVER",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "SourceSystemName": {
+        "type": "string",
+        "defaultValue": "WWI-mirror"
+      },
+      "StreamName": {
+        "type": "string"
+      },
+      "DelayTransformation": {
+        "type": "int",
+        "defaultValue": 0
+      },
+      "BronzeObjectID": {
+        "type": "string",
+        "defaultValue": "c6c5024f-de55-45ca-a79a-decbe16235e3"
+      },
+      "BronzeWorkspaceID": {
+        "type": "string",
+        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+      },
+      "SilverObjectID": {
+        "type": "string",
+        "defaultValue": "cc80a0ab-603d-4df9-bdfc-c35a7e8ab095"
+      },
+      "SilverWorkspaceID": {
+        "type": "string",
+        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+      },
+      "GoldObjectID": {
+        "type": "string",
+        "defaultValue": "7e2bbf6b-43fb-498c-90e3-56199c8c3b5e"
+      },
+      "GoldWorkspaceID": {
+        "type": "string",
+        "defaultValue": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec"
+      },
+      "GoldDWEndpoint": {
+        "type": "string",
+        "defaultValue": "2ipjetq4tn6elkixc3xundvzbi-u4ai3dmkby5u5daorxfpvr5n5q.datawarehouse.fabric.microsoft.com"
+      }
+    }
+  }
+}

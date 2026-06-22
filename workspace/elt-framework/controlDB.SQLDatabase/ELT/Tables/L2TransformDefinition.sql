@@ -48,7 +48,7 @@ CREATE TABLE [ELT].[L2TransformDefinition] (
 GO
 
 CREATE UNIQUE NONCLUSTERED INDEX [UI_L2TransformDefinition]
-    ON [ELT].[L2TransformDefinition]([InputFileSystem] ASC, [InputFileFolder] ASC, [InputFile] ASC, [InputDWTable] ASC, [OutputL2CurateFileSystem] ASC, [OutputL2CuratedFolder] ASC, [OutputL2CuratedFile] ASC);
+    ON [ELT].[L2TransformDefinition]([InputFileSystem] ASC, [InputFileFolder] ASC, [InputFile] ASC, [InputDWTable] ASC, [OutputL2CurateFileSystem] ASC, [OutputL2CuratedFolder] ASC, [OutputL2CuratedFile] ASC, [OutputDWTable] ASC);
 
 
 GO

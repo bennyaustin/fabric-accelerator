@@ -17,9 +17,9 @@ CREATE TABLE [ELT].[L2TransformInstance] (
     [DataToTimestamp]              DATETIME2 (7)    NULL,
     [DataFromNumber]               INT              NULL,
     [DataToNumber]                 INT              NULL,
-    [OutputL2CurateFileSystem]     VARCHAR (50)     NOT NULL,
-    [OutputL2CuratedFolder]        VARCHAR (200)    NOT NULL,
-    [OutputL2CuratedFile]          VARCHAR (200)    NOT NULL,
+    [OutputL2CurateFileSystem]     VARCHAR (50)     NULL,
+    [OutputL2CuratedFolder]        VARCHAR (200)    NULL,
+    [OutputL2CuratedFile]          VARCHAR (200)    NULL,
     [OutputL2CuratedFileDelimiter] CHAR (1)         NULL,
     [OutputL2CuratedFileFormat]    VARCHAR (10)     NULL,
     [OutputL2CuratedFileWriteMode] VARCHAR (20)     NULL,
@@ -59,7 +59,7 @@ CREATE TABLE [ELT].[L2TransformInstance] (
 GO
 
 CREATE NONCLUSTERED INDEX [UI_L2TransformInstance]
-    ON [ELT].[L2TransformInstance]([InputFileSystem] ASC, [InputFileFolder] ASC, [InputFile] ASC, [InputDWTable] ASC, [OutputL2CurateFileSystem] ASC, [OutputL2CuratedFolder] ASC, [OutputL2CuratedFile] ASC);
+    ON [ELT].[L2TransformInstance]([InputFileSystem] ASC, [InputFileFolder] ASC, [InputFile] ASC, [InputDWTable] ASC, [OutputL2CurateFileSystem] ASC, [OutputL2CuratedFolder] ASC, [OutputL2CuratedFile] ASC, [OutputDWTable] ASC);
 
 
 GO
