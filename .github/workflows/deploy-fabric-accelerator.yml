@@ -111,6 +111,7 @@ jobs:
         # Enable workspace Identity and grant contributor role
         - name: Enable workspace identity and grant contributor role
           run: |
+            set -x
             fab exists "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity" | grep -q true || fab create "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
 
             MI_PATH="${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
@@ -125,7 +126,8 @@ jobs:
                   -I "$wIObjId" \
                   -R contributor \
                   -f
-                  
+            set +x
+
         # Delete Eventstream if it exists (TEMP WORKAROUND for issue with existing Eventstream during redeployments)
         - name: Delete Eventstream if it exists
           run: |
