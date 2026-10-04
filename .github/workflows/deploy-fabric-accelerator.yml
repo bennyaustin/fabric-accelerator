@@ -115,8 +115,8 @@ jobs:
             fab exists "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity" | grep -q true || fab create "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
 
             MI_PATH="${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
-            wIAppId=$(fab get "$MI_PATH" -q applicationId | tr -d '\r\n')
-            wIObjId=$(fab get "$MI_PATH" -q servicePrincipalId | tr -d '\r\n')
+            wIAppId=$(fab get "$MI_PATH" -q workspaceIdentity.applicationId | tr -d '\r\n')
+            wIObjId=$(fab get "$MI_PATH" -q workspaceIdentity.servicePrincipalId | tr -d '\r\n')
 
             fab acl get "${WORKSPACE_NAME}.Workspace" \
               -q "[?principal.servicePrincipalDetails.aadAppId=='${wIAppId}'] | length(@)" |
