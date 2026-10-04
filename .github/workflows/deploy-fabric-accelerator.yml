@@ -114,15 +114,15 @@ jobs:
             set -x
             fab exists "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity" | grep -q true || fab create "${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
 
-            MI_PATH="${WORKSPACE_NAME}.Workspace/.managedidentities/${WORKSPACE_NAME}.ManagedIdentity"
-            wIAppId=$(fab get "$MI_PATH" -q workspaceIdentity.applicationId | tr -d '\r\n')
-            wIObjId=$(fab get "$MI_PATH" -q workspaceIdentity.servicePrincipalId | tr -d '\r\n')
+            WS_PATH="${WORKSPACE_NAME}.Workspace"
+            wIAppId=$(fab get "$WS_PATH" -q workspaceIdentity.applicationId | tr -d '\r\n')
+            wIObjId=$(fab get "$WS_PATH" -q workspaceIdentity.servicePrincipalId | tr -d '\r\n')
 
-            fab acl get "${WORKSPACE_NAME}.Workspace" \
+            fab acl get "$WS_PATH" \
               -q "[?principal.servicePrincipalDetails.aadAppId=='${wIAppId}'] | length(@)" |
               grep -q '^[1-9]' \
               && echo "Workspace identity already has an ACL in workspace" \
-              || fab acl set "${WORKSPACE_NAME}.Workspace" \
+              || fab acl set "$WS_PATH" \
                   -I "$wIObjId" \
                   -R contributor \
                   -f
