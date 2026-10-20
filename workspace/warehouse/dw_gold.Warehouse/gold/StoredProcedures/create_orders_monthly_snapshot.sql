@@ -45,3 +45,5 @@ BEGIN
 	GROUP BY EOMONTH([OrderDate]), [SalespersonPersonID],sp.FullName
 
 END
+
+GO

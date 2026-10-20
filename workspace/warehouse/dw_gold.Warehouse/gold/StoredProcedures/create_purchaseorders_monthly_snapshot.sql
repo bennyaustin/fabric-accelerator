@@ -45,3 +45,5 @@ BEGIN
 		where IsOrderFinalized=1
 		GROUP BY po.SupplierID,EOMONTH(OrderDate)
 END
+
+GO

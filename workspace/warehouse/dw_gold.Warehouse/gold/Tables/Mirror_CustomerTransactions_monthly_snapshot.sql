@@ -1,10 +1,12 @@
 CREATE TABLE [gold].[Mirror_CustomerTransactions_monthly_snapshot] (
-
-	[TransactionTypeName] varchar(8000) NOT NULL, 
-	[PaymentMethodName] varchar(8000) NOT NULL, 
-	[TransactionMonth] date NULL, 
-	[AmountExcludingTax] decimal(38,2) NULL, 
-	[TaxAmount] decimal(38,2) NULL, 
-	[TransactionAmount] decimal(38,2) NULL, 
-	[OutstandingBalance] decimal(38,2) NULL
+    [TransactionTypeName] VARCHAR (8000)  NOT NULL,
+    [PaymentMethodName]   VARCHAR (8000)  NOT NULL,
+    [TransactionMonth]    DATE            NULL,
+    [AmountExcludingTax]  DECIMAL (38, 2) NULL,
+    [TaxAmount]           DECIMAL (38, 2) NULL,
+    [TransactionAmount]   DECIMAL (38, 2) NULL,
+    [OutstandingBalance]  DECIMAL (38, 2) NULL
 );
+
+
+GO

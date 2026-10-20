@@ -49,3 +49,5 @@ BEGIN
         tt.[TransactionTypeName],
         DATEFROMPARTS(YEAR(spt.[TransactionDate]), MONTH(spt.[TransactionDate]), 1);
 END
+
+GO

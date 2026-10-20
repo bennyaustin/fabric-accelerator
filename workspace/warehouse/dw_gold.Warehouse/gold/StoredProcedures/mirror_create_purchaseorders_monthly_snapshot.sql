@@ -44,3 +44,5 @@ BEGIN
 		po.[SupplierID],
         DATEFROMPARTS(YEAR(po.[OrderDate]), MONTH(po.[OrderDate]), 1);
 END
+
+GO

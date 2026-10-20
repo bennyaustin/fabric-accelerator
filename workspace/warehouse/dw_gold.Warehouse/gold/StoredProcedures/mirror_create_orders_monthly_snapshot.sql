@@ -50,3 +50,5 @@ BEGIN
         p.[FullName],
         DATEFROMPARTS(YEAR(o.[OrderDate]), MONTH(o.[OrderDate]), 1);
 END
+
+GO

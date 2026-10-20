@@ -51,3 +51,5 @@ BEGIN
 				p.[PaymentMethodName],
 				EOMONTH(ct.[TransactionDate]);
 END
+
+GO

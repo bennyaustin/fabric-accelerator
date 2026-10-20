@@ -55,3 +55,5 @@ BEGIN
         ,ptype.[PaymentMethodName]
         ,EOMONTH(t.[TransactionDate]) 
 END
+
+GO
