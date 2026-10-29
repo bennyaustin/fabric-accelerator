@@ -1,61 +1,43 @@
 {
   "sources": [
     {
-      "id": "090ffc27-01c4-48fa-9852-1164a4f0da88",
-      "name": "L1Transform-Generic-Fabric",
+      "id": "2de8ba45-0392-48fd-90dd-70c460cd9926",
+      "name": "Optimize-DeltaLake-Tables",
       "type": "FabricJobEvents",
       "properties": {
         "eventScope": "Item",
         "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
-        "itemId": "3e035f81-2c25-416b-9009-b7ba22e444ab",
-        "includedEventTypes": [
-          "Microsoft.Fabric.JobEvents.ItemJobCreated",
-          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
-          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
-          "Microsoft.Fabric.JobEvents.ItemJobFailed"
-        ],
+        "itemId": "dcbe357b-2a94-4d28-a21f-8e2300e33f89",
+        "includedEventTypes": [],
         "filters": []
       }
     },
     {
-      "id": "1f00e84d-959f-46bd-b2d7-ce8cb28d6f18",
-      "name": "Fabric-Accelerator-Workspace",
-      "type": "FabricWorkspaceItemEvents",
+      "id": "a27dd748-6314-40bf-b8cc-ac5a44a7685c",
+      "name": "Master-ELT-MirrorDB",
+      "type": "FabricJobEvents",
       "properties": {
-        "eventScope": "Workspace",
+        "eventScope": "Item",
         "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
-        "includedEventTypes": [
-          "Microsoft.Fabric.ItemCreateSucceeded",
-          "Microsoft.Fabric.ItemCreateFailed",
-          "Microsoft.Fabric.ItemUpdateSucceeded",
-          "Microsoft.Fabric.ItemUpdateFailed",
-          "Microsoft.Fabric.ItemDeleteSucceeded",
-          "Microsoft.Fabric.ItemDeleteFailed",
-          "Microsoft.Fabric.ItemReadSucceeded",
-          "Microsoft.Fabric.ItemReadFailed"
-        ],
+        "itemId": "f6fbd55e-12b9-4ac8-9e6e-a37049dcca2d",
+        "includedEventTypes": [],
         "filters": []
       }
     },
     {
-      "id": "37054380-0a31-4806-8e12-e38862e7151a",
+      "id": "a50e715f-5ae8-4480-8577-3fe99aa7ac27",
       "name": "Master-ELT-ASQL",
       "type": "FabricJobEvents",
       "properties": {
         "eventScope": "Item",
         "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
         "itemId": "02b37a75-fb44-4efb-9d88-b6171a4d0d7d",
-        "includedEventTypes": [
-          "Microsoft.Fabric.JobEvents.ItemJobCreated",
-          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
-          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
-          "Microsoft.Fabric.JobEvents.ItemJobFailed"
-        ],
+        "includedEventTypes": [],
         "filters": []
       }
     },
     {
-      "id": "5fb7fe30-07a8-43a1-9296-6fa570bbafa2",
+      "id": "b1d39e56-8ac9-4212-90f5-3d848b4dc73e",
       "name": "dw-gold",
       "type": "FabricOneLakeEvents",
       "properties": {
@@ -77,24 +59,7 @@
       }
     },
     {
-      "id": "b8778268-3533-44ad-b1a2-8a928e1beefa",
-      "name": "Master-ELT-MirrorDB",
-      "type": "FabricJobEvents",
-      "properties": {
-        "eventScope": "Item",
-        "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
-        "itemId": "f6fbd55e-12b9-4ac8-9e6e-a37049dcca2d",
-        "includedEventTypes": [
-          "Microsoft.Fabric.JobEvents.ItemJobCreated",
-          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
-          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
-          "Microsoft.Fabric.JobEvents.ItemJobFailed"
-        ],
-        "filters": []
-      }
-    },
-    {
-      "id": "c9169667-6d84-4650-9eea-88aeb3498274",
+      "id": "b66ed4c9-31dc-4683-80e3-83e8b59693e4",
       "name": "lh-bronze-storage",
       "type": "FabricOneLakeEvents",
       "properties": {
@@ -117,24 +82,7 @@
       }
     },
     {
-      "id": "e715f26e-6a5d-4200-a6b3-ea5455b231f1",
-      "name": "Optimize-DeltaLake-Tabless",
-      "type": "FabricJobEvents",
-      "properties": {
-        "eventScope": "Item",
-        "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
-        "itemId": "dcbe357b-2a94-4d28-a21f-8e2300e33f89",
-        "includedEventTypes": [
-          "Microsoft.Fabric.JobEvents.ItemJobCreated",
-          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
-          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
-          "Microsoft.Fabric.JobEvents.ItemJobFailed"
-        ],
-        "filters": []
-      }
-    },
-    {
-      "id": "f4104096-9f8d-464f-be4c-513c4fb7c4c9",
+      "id": "bdf71c4e-da0a-4e39-befd-a50e86805a5f",
       "name": "lh-silver-storage",
       "type": "FabricOneLakeEvents",
       "properties": {
@@ -155,146 +103,39 @@
         ],
         "filters": []
       }
+    },
+    {
+      "id": "c2bcd35b-4adf-49cb-94a2-44b9fd4c65e3",
+      "name": "L1Transform-Generic-Fabric",
+      "type": "FabricJobEvents",
+      "properties": {
+        "eventScope": "Item",
+        "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+        "itemId": "3e035f81-2c25-416b-9009-b7ba22e444ab",
+        "includedEventTypes": [
+          "Microsoft.Fabric.JobEvents.ItemJobCreated",
+          "Microsoft.Fabric.JobEvents.ItemJobStatusChanged",
+          "Microsoft.Fabric.JobEvents.ItemJobSucceeded",
+          "Microsoft.Fabric.JobEvents.ItemJobFailed"
+        ],
+        "filters": []
+      }
+    },
+    {
+      "id": "cce1a3f7-92a9-4eba-b67b-5413e86d2dc7",
+      "name": "Fabric-Accelerator-Workspace",
+      "type": "FabricWorkspaceItemEvents",
+      "properties": {
+        "eventScope": "Workspace",
+        "workspaceId": "8d8d00a7-0e8a-4e3b-8c0e-8dcafac7adec",
+        "includedEventTypes": [],
+        "filters": []
+      }
     }
   ],
   "destinations": [
     {
-      "id": "4b20a84f-1921-4390-b171-dafd6e073179",
-      "name": "storageEvents",
-      "type": "Eventhouse",
-      "properties": {
-        "dataIngestionMode": "ProcessedIngestion",
-        "workspaceId": "00000000-0000-0000-0000-000000000000",
-        "itemId": "b22b1edd-6292-97ea-4089-fe9314ea1177",
-        "databaseName": "kdb_fabricEvents",
-        "tableName": "storageEvents",
-        "inputSerialization": {
-          "type": "Json",
-          "properties": {
-            "encoding": "UTF8"
-          }
-        }
-      },
-      "inputNodes": [
-        {
-          "name": "Filter_OnelakeEvents"
-        }
-      ],
-      "inputSchemas": [
-        {
-          "name": "Filter_OnelakeEvents",
-          "schema": {
-            "columns": [
-              {
-                "name": "specversion",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "id",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "type",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "time",
-                "type": "DateTime",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "source",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "subject",
-                "type": "Nvarchar(max)",
-                "fields": null,
-                "items": null
-              },
-              {
-                "name": "data",
-                "type": "Record",
-                "fields": [
-                  {
-                    "name": "api",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "clientRequestId",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "requestId",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "eTag",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "contentType",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "contentLength",
-                    "type": "BigInt",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "contentOffset",
-                    "type": "BigInt",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "blobUrl",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "url",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  },
-                  {
-                    "name": "sequencer",
-                    "type": "Nvarchar(max)",
-                    "fields": null,
-                    "items": null
-                  }
-                ],
-                "items": null
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "id": "4bae2697-4847-4805-9967-e6599be29cdd",
+      "id": "101b6570-87b0-4dad-849f-b21051932215",
       "name": "workspaceEvents",
       "type": "Eventhouse",
       "properties": {
@@ -429,7 +270,7 @@
       ]
     },
     {
-      "id": "7f5758fc-759c-46ea-bcdd-fa0ac58d7c60",
+      "id": "9e835447-f160-48e8-9b08-e65b2ed622e6",
       "name": "jobEvents",
       "type": "Eventhouse",
       "properties": {
@@ -453,6 +294,141 @@
       "inputSchemas": [
         {
           "name": "Filter_JobEvents",
+          "schema": {
+            "columns": [
+              {
+                "name": "specversion",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "id",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "type",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "time",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "source",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "subject",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "data",
+                "type": "Record",
+                "fields": [
+                  {
+                    "name": "api",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "clientRequestId",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "requestId",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "eTag",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentType",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentLength",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "contentOffset",
+                    "type": "BigInt",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "blobUrl",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "url",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  },
+                  {
+                    "name": "sequencer",
+                    "type": "Nvarchar(max)",
+                    "fields": null,
+                    "items": null
+                  }
+                ],
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "c042831b-8cfe-4106-89f8-16d5570d7190",
+      "name": "storageEvents",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "itemId": "b22b1edd-6292-97ea-4089-fe9314ea1177",
+        "databaseName": "kdb_fabricEvents",
+        "tableName": "storageEvents",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "Filter_OnelakeEvents"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "Filter_OnelakeEvents",
           "schema": {
             "columns": [
               {
@@ -593,7 +569,7 @@
           "name": "Master-ELT-MirrorDB"
         },
         {
-          "name": "Optimize-DeltaLake-Tabless"
+          "name": "Optimize-DeltaLake-Tables"
         }
       ]
     }
