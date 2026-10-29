@@ -6,15 +6,13 @@
         "id": "4133f2a7-9b55-4846-89fa-b41381ea1e5d",
         "clusterUri": "https://trd-q1p0ndrk3rrqy8fsdn.z0.kusto.fabric.microsoft.com/;fed=true",
         "type": "Fabric",
-        "databaseItemId": "14ea1177-fe93-4089-97ea-6292b22b1edd",
-        "databaseItemName": "kdb_fabricEvents"
+        "databaseItemId": "14ea1177-fe93-4089-97ea-6292b22b1edd"
       },
       {
         "id": "691d55f0-1c5b-441c-966a-ffdca75f9669",
         "clusterUri": "https://trd-q1p0ndrk3rrqy8fsdn.z0.kusto.fabric.microsoft.com",
         "type": "Fabric",
-        "databaseItemId": "14ea1177-fe93-4089-97ea-6292b22b1edd",
-        "databaseItemName": "kdb_fabricEvents"
+        "databaseItemId": "14ea1177-fe93-4089-97ea-6292b22b1edd"
       }
     ],
     "tabs": [
@@ -51,6 +49,12 @@
       {
         "id": "2702953d-268c-45f1-9219-fbf1c501484b",
         "content": ".show function ['expandJobEvents']\n",
+        "title": "",
+        "dataSourceId": "691d55f0-1c5b-441c-966a-ffdca75f9669"
+      },
+      {
+        "id": "198b80e7-8673-41b4-87bd-40be09204d24",
+        "content": "// Use 'take' to view a sample number of records in the table and check the data.\njobEvents //bronze\n| take 100\n\njobEventsExpanded //silver\n| take 100\n\n\ndailyAggJobEvents //gold\n| take 100",
         "title": "",
         "dataSourceId": "691d55f0-1c5b-441c-966a-ffdca75f9669"
       }

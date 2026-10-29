@@ -108,6 +108,6 @@
             subject,
             type,
             api }
-.alter table jobEventsExpanded policy update "[{\"IsEnabled\":true,\"Source\":\"jobEvents\",\"Query\":\"expandJobEvents()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null}]"
-.alter table storageEventsExpanded policy update "[{\"IsEnabled\":true,\"Source\":\"storageEvents\",\"Query\":\"expandStorageEvents()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null}]"
-.alter table workspaceEventsExpanded policy update "[{\"IsEnabled\":true,\"Source\":\"workspaceEvents\",\"Query\":\"expandWorkspaceEvents()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null}]"
+.alter table jobEventsExpanded policy update "[{\"IsEnabled\":true,\"Source\":\"jobEvents\",\"Query\":\"expandJobEvents()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null,\"IsAsync\":false}]"
+.alter table storageEventsExpanded policy update "[{\"IsEnabled\":true,\"Source\":\"storageEvents\",\"Query\":\"expandStorageEvents()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null,\"IsAsync\":false}]"
+.alter table workspaceEventsExpanded policy update "[{\"IsEnabled\":true,\"Source\":\"workspaceEvents\",\"Query\":\"expandWorkspaceEvents()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null,\"IsAsync\":false}]"
