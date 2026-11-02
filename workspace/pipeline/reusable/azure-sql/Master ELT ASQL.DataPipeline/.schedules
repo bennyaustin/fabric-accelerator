@@ -3,11 +3,12 @@
   "schedules": [
     {
       "enabled": true,
+      "enabledControlType": "UserEnabled",
       "jobType": "Execute",
       "configuration": {
         "type": "Daily",
         "startDateTime": "2024-10-10T00:00:00",
-        "endDateTime": "2026-06-30T23:59:00",
+        "endDateTime": "2027-06-30T23:59:00",
         "localTimeZoneId": "AUS Eastern Standard Time",
         "times": [
           "05:15"
