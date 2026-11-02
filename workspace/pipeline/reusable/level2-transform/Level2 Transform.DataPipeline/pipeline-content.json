@@ -19,6 +19,7 @@
       },
       {
         "name": "L2Transform - RUNNING",
+        "description": "L2Transform - RUNNING",
         "type": "SqlServerStoredProcedure",
         "dependsOn": [
           {

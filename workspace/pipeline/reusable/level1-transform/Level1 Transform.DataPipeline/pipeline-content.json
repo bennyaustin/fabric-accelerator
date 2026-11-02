@@ -19,6 +19,7 @@
       },
       {
         "name": "Level1 Transform RUNNING",
+        "description": "Level1 Transform RUNNING",
         "type": "SqlServerStoredProcedure",
         "dependsOn": [
           {

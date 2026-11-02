@@ -3,6 +3,7 @@
     "activities": [
       {
         "name": "Insert Ingest Instance - RUNNING",
+        "description": "Insert Ingest Instance - RUNNING",
         "type": "SqlServerStoredProcedure",
         "dependsOn": [
           {
